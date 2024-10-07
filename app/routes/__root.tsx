@@ -1,7 +1,7 @@
 import { createRootRoute } from "@tanstack/react-router";
 import { Outlet, ScrollRestoration } from "@tanstack/react-router";
 import { Body, Head, Html, Meta, Scripts } from "@tanstack/start";
-import * as React from "react";
+import appCss from "~/styles/app.css?url";
 
 export const Route = createRootRoute({
   meta: () => [
@@ -17,6 +17,7 @@ export const Route = createRootRoute({
     },
   ],
   component: RootComponent,
+  links: () => [{ rel: "stylesheet", href: appCss }],
 });
 
 function RootComponent() {

@@ -1,11 +1,11 @@
-import * as fs from "fs";
+import * as fs from "node:fs";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/start";
 
 const filePath = "count.txt";
 
 async function readCount() {
-  return parseInt(
+  return Number.parseInt(
     await fs.promises.readFile(filePath, "utf-8").catch(() => "0"),
   );
 }
@@ -30,6 +30,8 @@ function Home() {
 
   return (
     <button
+      type="button"
+      className="bg-red-500"
       onClick={() => {
         updateCount(1).then(() => {
           router.invalidate();

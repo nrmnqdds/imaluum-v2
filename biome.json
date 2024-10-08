@@ -11,7 +11,8 @@
 	},
 	"formatter": {
 		"enabled": true,
-		"indentStyle": "tab"
+		"indentStyle": "tab",
+		"formatWithErrors": true
 	},
 	"organizeImports": {
 		"enabled": true
@@ -19,8 +20,12 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
-		}
+			"recommended": true,
+			"nursery": {
+				"useComponentExportOnlyModules": "warn"
+			}
+		},
+		"ignore": ["./node_modules", "./app/routeTree.gen.ts"]
 	},
 	"javascript": {
 		"formatter": {

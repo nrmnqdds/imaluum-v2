@@ -2,12 +2,12 @@ import { useRouter } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/start";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { fetch } from "undici";
 import { Button } from "~/components/shared/button";
 import { Input } from "~/components/shared/input";
 import useProfile from "~/hooks/use-profile";
 import useResult from "~/hooks/use-result";
 import useSchedule from "~/hooks/use-schedule";
+import { setCookie } from "vinxi/http";
 
 type TLoginResponse = {
   status: number;
@@ -43,6 +43,8 @@ const LoginForm = () => {
     });
 
     const json = (await res.json()) as unknown as TLoginResponse;
+
+    setCookie("MOD_AUTH_CAS", json.data.token);
 
     return json;
   });
@@ -96,7 +98,7 @@ const LoginForm = () => {
           disabled={isLoading}
         />
       </div>
-      <Button type="submit" className="float-right w-24" disabled={isLoading}>
+      <Button type="submit" className="float-right" disabled={isLoading}>
         <span className="text-zinc-900 dark:text-white">
           {isLoading ? "Logging in" : "Log in"}
         </span>

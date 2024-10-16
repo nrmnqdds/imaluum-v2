@@ -8,6 +8,7 @@ import useProfile from "~/hooks/use-profile";
 import useResult from "~/hooks/use-result";
 import useSchedule from "~/hooks/use-schedule";
 import { setCookie } from "vinxi/http";
+import { request } from "undici";
 
 type TLoginResponse = {
   status: number;
@@ -33,18 +34,20 @@ const LoginForm = () => {
   const router = useRouter();
 
   const loginUser = createServerFn("POST", async (credentials: Credentials) => {
-    const res = await fetch("https://api.nrmnqdds.com/api/login", {
+    const res = await request("https://api.nrmnqdds.com/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(credentials),
-      credentials: "include",
     });
 
-    const json = (await res.json()) as unknown as TLoginResponse;
+    const json = (await res.body.json()) as unknown as TLoginResponse;
 
-    setCookie("MOD_AUTH_CAS", json.data.token);
+    setCookie("MOD_AUTH_CAS", json.data.token, {
+      // Expires in 30 minutes
+      maxAge: 1800,
+    });
 
     return json;
   });
@@ -64,7 +67,7 @@ const LoginForm = () => {
       ScheduleReset();
       ResultReset();
 
-      if (res.status === 201) {
+      if (res.status === 200 || res.status === 201) {
         setProfile({
           matricNo: res.data.username,
           name: "",
@@ -74,9 +77,11 @@ const LoginForm = () => {
           to: "/dashboard",
         });
       } else {
+        console.log(res);
         toast.error(res.message);
       }
     } catch (err) {
+      console.log(err);
       toast.error("An error occurred. Please try again later.");
     } finally {
       setIsLoading(false);

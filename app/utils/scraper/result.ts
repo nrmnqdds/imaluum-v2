@@ -1,4 +1,3 @@
-import { json } from "@tanstack/start";
 import { parse } from "node-html-parser";
 import type { Result } from "~/types/result";
 
@@ -126,7 +125,7 @@ export async function GetResult(_cookies: string) {
     });
 
     if (!response.ok) {
-      return json({ message: "Failed to fetch data" }, { status: 500 });
+      return { error: "Failed to fetch data" };
     }
 
     const body = await response.text();
@@ -153,13 +152,10 @@ export async function GetResult(_cookies: string) {
     if (sessionList.length === 0) {
       // must return null, dont throw error
       // assuming the student is 1st year 1st sem and havent taken any exams yet
-      return json(
-        {
-          success: true,
-          data: null,
-        },
-        { status: 200 },
-      );
+      return {
+        success: true,
+        data: null,
+      };
     }
 
     const results: Result[] = await Promise.all(
@@ -172,16 +168,13 @@ export async function GetResult(_cookies: string) {
       ),
     );
 
-    return json(
-      {
-        success: true,
-        data: results,
-      },
-      { status: 200 },
-    );
+    return {
+      success: true,
+      data: results,
+    };
   } catch (error) {
     console.error("Error fetching data:", error);
     // throw new Error("Failed to fetch data");
-    return json({ error: "Failed to fetch data" }, { status: 500 });
+    return { error: "Failed to fetch data" };
   }
 }

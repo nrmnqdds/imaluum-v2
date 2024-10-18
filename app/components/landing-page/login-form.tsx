@@ -69,9 +69,9 @@ const LoginForm = () => {
 
       if (res.status === 200 || res.status === 201) {
         setProfile({
-          matricNo: res.data.username,
+          matric_no: res.data.username,
           name: "",
-          imageURL: "",
+          image_url: "",
         });
         router.navigate({
           to: "/dashboard",

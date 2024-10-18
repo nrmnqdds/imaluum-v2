@@ -29,37 +29,40 @@ type TScheduleResponse = {
 };
 
 const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
-  const { setProfile } = useProfile();
-  const { setResult } = useResult();
-  const { setSchedule } = useSchedule();
+  const { profile, setProfile } = useProfile();
+  const { result, setResult } = useResult();
+  const { schedule, setSchedule } = useSchedule();
 
-  const fetchProfile = createServerFn("GET", async (): Promise<StudentInfo> => {
-    const token = GetToken();
+  const fetchProfile = createServerFn(
+    "GET",
+    async (): Promise<StudentInfo | null> => {
+      const token = GetToken();
 
-    if (!token) {
-      throw redirect({
-        to: "/",
+      if (!token) {
+        throw redirect({
+          to: "/",
+        });
+      }
+
+      const res = await fetch("https://api.nrmnqdds.com/api/profile", {
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: token,
+        },
       });
-    }
 
-    const res = await fetch("https://api.nrmnqdds.com/api/profile", {
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: token,
-      },
-    });
+      if (!res.ok) {
+        console.log("profile error: ", res);
+        return null;
+      }
 
-    if (!res.ok) {
-      console.log("profile error: ", res);
-      throw new Error("Failed to fetch data");
-    }
+      const json = (await res.json()) as unknown as TProfileResponse;
+      console.log("profile: ", json);
 
-    const json = (await res.json()) as unknown as TProfileResponse;
-    console.log("profile: ", json);
-
-    return json.data;
-  });
+      return json.data;
+    },
+  );
 
   const fetchResult = createServerFn("GET", async () => {
     const token = GetToken();
@@ -73,7 +76,7 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 
     if (res.error || !res.data) {
       console.log("result error: ", res);
-      throw new Error("Failed to fetch data");
+      return null;
     }
 
     const json = res.data;
@@ -82,33 +85,36 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
     return json;
   });
 
-  const fetchSchedule = createServerFn("GET", async () => {
-    const token = GetToken();
+  const fetchSchedule = createServerFn(
+    "GET",
+    async (): Promise<Sessions[] | null> => {
+      const token = GetToken();
 
-    if (!token) {
-      throw redirect({
-        to: "/",
+      if (!token) {
+        throw redirect({
+          to: "/",
+        });
+      }
+
+      const res = await fetch("https://api.nrmnqdds.com/api/schedule", {
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: token,
+        },
       });
-    }
 
-    const res = await fetch("https://api.nrmnqdds.com/api/schedule", {
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: token,
-      },
-    });
+      if (!res.ok) {
+        console.log("schedule error: ", res);
+        return null;
+      }
 
-    if (!res.ok) {
-      console.log("schedule error: ", res);
-      throw new Error("Failed to fetch data");
-    }
+      const json = (await res.json()) as unknown as TScheduleResponse;
+      console.log("schedule: ", json);
 
-    const json = (await res.json()) as unknown as TScheduleResponse;
-    console.log("schedule: ", json);
-
-    return json.data;
-  });
+      return json.data;
+    },
+  );
 
   const fetchImaluum = useQueries({
     queries: [
@@ -116,7 +122,11 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
         queryKey: ["profile"],
         queryFn: async () => {
           const res = await fetchProfile();
+          if (!res) {
+            throw new Error("Profile not found");
+          }
           setProfile(res);
+          return res;
         },
         retry: 3,
       },
@@ -124,7 +134,11 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
         queryKey: ["result"],
         queryFn: async () => {
           const res = await fetchResult();
+          if (!res) {
+            throw new Error("Result not found");
+          }
           setResult(res);
+          return res;
         },
         retry: 3,
       },
@@ -132,20 +146,30 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
         queryKey: ["schedule"],
         queryFn: async () => {
           const res = await fetchSchedule();
+          if (!res) {
+            throw new Error("Schedule not found");
+          }
           setSchedule(res);
+          return res;
         },
         retry: 3,
       },
     ],
   });
 
-  return fetchImaluum.some((query) => query.isLoading) ? (
-    <LoadingScreen />
-  ) : fetchImaluum.every((query) => query.isFetched && query.isSuccess) ? (
-    children
-  ) : (
-    <NotFound />
-  );
+  if (fetchImaluum.some((query) => query.isLoading)) {
+    return <LoadingScreen />;
+  }
+
+  if (fetchImaluum.some((query) => query.isError)) {
+    return <NotFound />;
+  }
+
+  if (profile && result?.length !== 0 && schedule?.length !== 0) {
+    return children;
+  }
+
+  return <NotFound />;
 };
 
 export default ImaluumProvider;

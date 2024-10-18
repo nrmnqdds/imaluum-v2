@@ -3,7 +3,7 @@ import { Image } from "@unpic/react";
 
 const LoadingScreen = () => {
   return (
-    <div className="w-full h-screen bg-background flex items-center justify-center">
+    <div className="w-full h-screen bg-card flex items-center justify-center">
       <div className="flex flex-col items-center gap-y-4">
         <Image
           src={LOGO}

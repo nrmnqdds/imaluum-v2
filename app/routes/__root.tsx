@@ -41,7 +41,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </Head>
       <Body className="scroll-smooth">
         <ThemeProvider attribute="class" defaultTheme="dark">
-          <main className="relative isolate overflow-hidden bg-slate-100 dark:bg-zinc-900">
+          <main className="relative isolate overflow-hidden bg-card min-h-screen">
             {children}
           </main>
           <ScrollRestoration />

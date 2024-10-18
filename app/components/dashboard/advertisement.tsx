@@ -1,26 +1,42 @@
 import { useQuery } from "@tanstack/react-query";
+import { fetch } from "undici";
 import { Image } from "@unpic/react";
 import { TvIcon, LinkIcon } from "@heroicons/react/24/outline";
+import type { Advertisement as TAds } from "~/types/ads";
+import { createServerFn } from "@tanstack/start";
+
+type TAdsResponse = {
+  status: number;
+  message: string;
+  data: TAds[];
+};
 
 const Advertisement = ({ className }: { className: string }) => {
+  const fetchAds = createServerFn("GET", async (): Promise<TAds[] | null> => {
+    const res = await fetch("https://api.nrmnqdds.com/api/ads", {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      console.log("ads error: ", res);
+      return null;
+    }
+
+    const json = (await res.json()) as unknown as TAdsResponse;
+
+    return json.data;
+  });
+
   const { data: ads, isLoading: loading } = useQuery({
     queryKey: ["ads"],
     queryFn: async () => {
-      // const data = await GetAds();
-      // if (data.success) {
-      //   return data.data;
-      // }
+      const res = await fetchAds();
+      if (!res) return;
 
-      const res = await fetch("/api/ads");
-      if (!res.ok) {
-        throw new Error("Failed to fetch data");
-      }
-
-      const data = await res.json();
-
-      if (data.success) {
-        return data.data;
-      }
+      return res;
     },
     retry: 3,
   });
@@ -28,7 +44,7 @@ const Advertisement = ({ className }: { className: string }) => {
   return (
     <section className={className}>
       <div className="my-5 flex justify-between w-full items-center">
-        <h2 className="lg:text-2xl font-bold text-zinc-900 dark:text-slate-100 flex items-center gap-5">
+        <h2 className="lg:text-lg font-bold text-zinc-900 dark:text-slate-100 flex items-center gap-5">
           <TvIcon />
           SOUQ Advertisement
         </h2>
@@ -47,7 +63,6 @@ const Advertisement = ({ className }: { className: string }) => {
 
       <div className="flex flex-row gap-2 w-full h-full">
         {loading ? (
-          // <p>Loading...</p>
           <div className="flex flex-row gap-2 overflow-hidden">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
               <div
@@ -57,7 +72,7 @@ const Advertisement = ({ className }: { className: string }) => {
             ))}
           </div>
         ) : (
-          //@ts-ignore
+          // @ts-ignore
           <AdsCarousel ads={ads} />
         )}
       </div>
@@ -65,40 +80,37 @@ const Advertisement = ({ className }: { className: string }) => {
   );
 };
 
-type AdsType = {
-  adsImg: string;
-  adsLink: string;
-}[];
-
-function AdsCarousel({ ads }: { ads: AdsType }) {
+function AdsCarousel({ ads }: { ads: TAds[] }) {
   return (
     <div className="w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]">
       <ul className="flex items-center justify-center md:justify-start [&_li]:mx-8 [&_img]:max-w-none animate-infinite-scroll">
         {ads.map((ad, index) => (
           <a
             key={index}
-            href={ad.adsLink}
+            href={ad.link}
             className="flex-shrink-0 w-36 h-36 relative mx-1 hover:opacity-50 transition-opacity duration-300"
           >
             <Image
-              src={ad.adsImg}
+              src={ad.image_url}
               alt=""
               layout="fullWidth"
-              className="rounded-lg object-cover"
+              objectFit="cover"
+              className="rounded-lg w-full h-full"
             />
           </a>
         ))}
         {ads.map((ad, index) => (
           <a
             key={index}
-            href={ad.adsLink}
+            href={ad.link}
             className="flex-shrink-0 w-36 h-36 relative mx-1 hover:opacity-50 transition-opacity duration-300"
           >
             <Image
-              src={ad.adsImg}
+              src={ad.image_url}
               alt=""
               layout="fullWidth"
-              className="rounded-lg object-cover"
+              objectFit="cover"
+              className="rounded-lg w-full h-full"
             />
           </a>
         ))}
@@ -110,30 +122,30 @@ function AdsCarousel({ ads }: { ads: AdsType }) {
         {ads.map((ad, index) => (
           <a
             key={index}
-            href={ad.adsLink}
+            href={ad.link}
             className="flex-shrink-0 w-36 h-36 relative mx-1 hover:opacity-50 transition-opacity duration-300"
           >
             <Image
-              src={ad.adsImg}
+              src={ad.image_url}
               objectFit="cover"
               layout="fullWidth"
               alt=""
-              className="rounded-lg object-cover"
+              className="rounded-lg w-full h-full"
             />
           </a>
         ))}
         {ads.map((ad, index) => (
           <a
             key={index}
-            href={ad.adsLink}
+            href={ad.link}
             className="flex-shrink-0 w-36 h-36 relative mx-1 hover:opacity-50 transition-opacity duration-300"
           >
             <Image
-              src={ad.adsImg}
+              src={ad.image_url}
               alt=""
               objectFit="cover"
               layout="fullWidth"
-              className="rounded-lg object-cover"
+              className="rounded-lg w-full h-full"
             />
           </a>
         ))}

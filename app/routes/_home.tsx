@@ -1,8 +1,9 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/start";
 import { getHeaders } from "vinxi/http";
-import ImaluumProvider from "~/components/providers/imaluum-provider";
 import Sidebar from "~/components/shared/sidebar";
+import FinancialDialog from "~/components/shared/financial-dialog";
+import ImaluumProvider from "~/components/providers/imaluum-provider";
 
 /**
  * getSession is a function that checks if the user has a session
@@ -39,9 +40,12 @@ const getSession = createServerFn("GET", async () => {
 export const Route = createFileRoute("/_home")({
   component: () => {
     return (
-      <Sidebar>
-        <Outlet />
-      </Sidebar>
+      <ImaluumProvider>
+        <Sidebar>
+          <Outlet />
+        </Sidebar>
+        <FinancialDialog />
+      </ImaluumProvider>
     );
   },
   beforeLoad: async () => await getSession(),

@@ -58,7 +58,6 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       const json = (await res.json()) as unknown as TProfileResponse;
-      console.log("profile: ", json);
 
       return json.data;
     },
@@ -80,7 +79,6 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const json = res.data;
-    console.log("result: ", json);
 
     return json;
   });
@@ -110,7 +108,6 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       const json = (await res.json()) as unknown as TScheduleResponse;
-      console.log("schedule: ", json);
 
       return json.data;
     },
@@ -128,6 +125,7 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
           setProfile(res);
           return res;
         },
+        enabled: !profile,
         retry: 3,
       },
       {
@@ -141,6 +139,7 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
           return res;
         },
         retry: 3,
+        enabled: !result?.length,
       },
       {
         queryKey: ["schedule"],
@@ -153,6 +152,7 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
           return res;
         },
         retry: 3,
+        enabled: !schedule?.length,
       },
     ],
   });

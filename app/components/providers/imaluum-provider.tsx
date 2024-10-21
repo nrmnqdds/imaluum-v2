@@ -49,7 +49,7 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 				credentials: "include",
 				headers: {
 					"Content-Type": "application/json",
-					Cookie: token,
+					Cookie: `MOD_AUTH_CAS=${token}`,
 				},
 			});
 
@@ -99,7 +99,7 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 				credentials: "include",
 				headers: {
 					"Content-Type": "application/json",
-					Cookie: token,
+					Cookie: `MOD_AUTH_CAS=${token}`,
 				},
 			});
 

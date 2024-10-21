@@ -17,7 +17,7 @@ export const getResultFromSession = async (
 	try {
 		const response = await fetch(url, {
 			headers: {
-				Cookie: cookie,
+				Cookie: `MOD_AUTH_CAS=${cookie}`,
 			},
 			// https: { rejectUnauthorized: false },
 			// followRedirect: false,
@@ -120,7 +120,7 @@ export async function GetResult(_cookies: string) {
 	try {
 		const response = await fetch(IMALUUM_RESULT_PAGE, {
 			headers: {
-				Cookie: _cookies,
+				Cookie: `MOD_AUTH_CAS=${_cookies}`,
 			},
 		});
 

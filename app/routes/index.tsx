@@ -6,7 +6,7 @@ import LOGO from "~/assets/logo-landing-page.png";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Image } from "@unpic/react";
 import { ThemeSwitcher } from "~/components/shared/theme-switcher";
-import { getHeaders } from "vinxi/http";
+import { getCookie } from "vinxi/http";
 import { createServerFn } from "@tanstack/start";
 
 /**
@@ -14,19 +14,7 @@ import { createServerFn } from "@tanstack/start";
  * and redirects them to the dashboard if they do.
  */
 const getSession = createServerFn("GET", async () => {
-	const headers = getHeaders();
-
-	if (!headers.cookie) {
-		return;
-	}
-
-	const cookies = headers.cookie.split("; ");
-
-	if (cookies.length === 0) {
-		return;
-	}
-
-	const token = cookies.find((cookie) => cookie.startsWith("MOD_AUTH_CAS="));
+	const token = getCookie("MOD_AUTH_CAS");
 
 	if (!token) {
 		return;

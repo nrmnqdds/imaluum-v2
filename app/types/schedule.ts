@@ -1,7 +1,7 @@
 export type WeekTime = {
   start: string;
   end: string;
-  day: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  day: number;
 };
 
 export type TimetableConfig = {
@@ -27,10 +27,17 @@ export type Schedule = {
   timestamps: Timestamp[];
   venue: string;
   lecturer: string;
+  color: string;
 };
 
 export type Timestamp = {
   start: string;
   end: string;
   day: number;
+};
+
+export type TimetableEvent = {
+  title: string;
+  color: string;
+  weekTime: WeekTime;
 };

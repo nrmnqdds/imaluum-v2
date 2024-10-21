@@ -1,4 +1,5 @@
 import { useQueries } from "@tanstack/react-query";
+import { predefinedColors } from "~/utils/colors";
 import { redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/start";
 import { fetch } from "undici";
@@ -148,7 +149,23 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
           if (!res) {
             throw new Error("Schedule not found");
           }
-          setSchedule(res);
+          const tweakedSchedule = res.map((item) => {
+            return {
+              ...item,
+              schedule: item.schedule.map((schedule) => {
+                return {
+                  ...schedule,
+                  color:
+                    schedule.color ||
+                    predefinedColors[
+                      Math.floor(Math.random() * predefinedColors.length)
+                    ],
+                };
+              }),
+            };
+          });
+
+          setSchedule(tweakedSchedule);
           return res;
         },
         retry: 3,

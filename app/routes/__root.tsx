@@ -6,48 +6,48 @@ import appCss from "~/styles/app.css?url";
 import type { QueryClient } from "@tanstack/react-query";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
-  {
-    meta: () => [
-      {
-        charSet: "utf-8",
-      },
-      {
-        name: "viewport",
-        content: "width=device-width, initial-scale=1",
-      },
-      {
-        title: "Simplified i-Ma'luum",
-        description: "A simplified version of i-Ma'luum for students.",
-      },
-    ],
-    component: RootComponent,
-    links: () => [{ rel: "stylesheet", href: appCss }],
-  },
+	{
+		meta: () => [
+			{
+				charSet: "utf-8",
+			},
+			{
+				name: "viewport",
+				content: "width=device-width, initial-scale=1",
+			},
+			{
+				title: "Simplified i-Ma'luum",
+				description: "A simplified version of i-Ma'luum for students.",
+			},
+		],
+		component: RootComponent,
+		links: () => [{ rel: "stylesheet", href: appCss }],
+	},
 );
 
 function RootComponent() {
-  return (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
-  );
+	return (
+		<RootDocument>
+			<Outlet />
+		</RootDocument>
+	);
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  return (
-    <Html lang="en">
-      <Head>
-        <Meta />
-      </Head>
-      <Body className="scroll-smooth">
-        <ThemeProvider attribute="class" defaultTheme="dark">
-          <main className="relative isolate overflow-hidden bg-card min-h-screen">
-            {children}
-          </main>
-          <ScrollRestoration />
-          <Scripts />
-        </ThemeProvider>
-      </Body>
-    </Html>
-  );
+	return (
+		<Html lang="en">
+			<Head>
+				<Meta />
+			</Head>
+			<Body className="scroll-smooth">
+				<ThemeProvider attribute="class" defaultTheme="dark">
+					<main className="relative isolate overflow-hidden bg-card min-h-screen">
+						{children}
+					</main>
+					<ScrollRestoration />
+					<Scripts />
+				</ThemeProvider>
+			</Body>
+		</Html>
+	);
 }

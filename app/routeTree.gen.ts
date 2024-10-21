@@ -10,109 +10,127 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as HomeImport } from './routes/_home'
-import { Route as IndexImport } from './routes/index'
-import { Route as HomeDashboardImport } from './routes/_home/dashboard'
+import { Route as rootRoute } from "./routes/__root";
+import { Route as HomeImport } from "./routes/_home";
+import { Route as IndexImport } from "./routes/index";
+import { Route as HomeScheduleImport } from "./routes/_home/schedule";
+import { Route as HomeDashboardImport } from "./routes/_home/dashboard";
 
 // Create/Update Routes
 
 const HomeRoute = HomeImport.update({
-  id: '/_home',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/_home",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const IndexRoute = IndexImport.update({
-  path: '/',
-  getParentRoute: () => rootRoute,
-} as any)
+	path: "/",
+	getParentRoute: () => rootRoute,
+} as any);
+
+const HomeScheduleRoute = HomeScheduleImport.update({
+	path: "/schedule",
+	getParentRoute: () => HomeRoute,
+} as any);
 
 const HomeDashboardRoute = HomeDashboardImport.update({
-  path: '/dashboard',
-  getParentRoute: () => HomeRoute,
-} as any)
+	path: "/dashboard",
+	getParentRoute: () => HomeRoute,
+} as any);
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/_home': {
-      id: '/_home'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof HomeImport
-      parentRoute: typeof rootRoute
-    }
-    '/_home/dashboard': {
-      id: '/_home/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof HomeDashboardImport
-      parentRoute: typeof HomeImport
-    }
-  }
+declare module "@tanstack/react-router" {
+	interface FileRoutesByPath {
+		"/": {
+			id: "/";
+			path: "/";
+			fullPath: "/";
+			preLoaderRoute: typeof IndexImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/_home": {
+			id: "/_home";
+			path: "";
+			fullPath: "";
+			preLoaderRoute: typeof HomeImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/_home/dashboard": {
+			id: "/_home/dashboard";
+			path: "/dashboard";
+			fullPath: "/dashboard";
+			preLoaderRoute: typeof HomeDashboardImport;
+			parentRoute: typeof HomeImport;
+		};
+		"/_home/schedule": {
+			id: "/_home/schedule";
+			path: "/schedule";
+			fullPath: "/schedule";
+			preLoaderRoute: typeof HomeScheduleImport;
+			parentRoute: typeof HomeImport;
+		};
+	}
 }
 
 // Create and export the route tree
 
 interface HomeRouteChildren {
-  HomeDashboardRoute: typeof HomeDashboardRoute
+	HomeDashboardRoute: typeof HomeDashboardRoute;
+	HomeScheduleRoute: typeof HomeScheduleRoute;
 }
 
 const HomeRouteChildren: HomeRouteChildren = {
-  HomeDashboardRoute: HomeDashboardRoute,
-}
+	HomeDashboardRoute: HomeDashboardRoute,
+	HomeScheduleRoute: HomeScheduleRoute,
+};
 
-const HomeRouteWithChildren = HomeRoute._addFileChildren(HomeRouteChildren)
+const HomeRouteWithChildren = HomeRoute._addFileChildren(HomeRouteChildren);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '': typeof HomeRouteWithChildren
-  '/dashboard': typeof HomeDashboardRoute
+	"/": typeof IndexRoute;
+	"": typeof HomeRouteWithChildren;
+	"/dashboard": typeof HomeDashboardRoute;
+	"/schedule": typeof HomeScheduleRoute;
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '': typeof HomeRouteWithChildren
-  '/dashboard': typeof HomeDashboardRoute
+	"/": typeof IndexRoute;
+	"": typeof HomeRouteWithChildren;
+	"/dashboard": typeof HomeDashboardRoute;
+	"/schedule": typeof HomeScheduleRoute;
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/_home': typeof HomeRouteWithChildren
-  '/_home/dashboard': typeof HomeDashboardRoute
+	__root__: typeof rootRoute;
+	"/": typeof IndexRoute;
+	"/_home": typeof HomeRouteWithChildren;
+	"/_home/dashboard": typeof HomeDashboardRoute;
+	"/_home/schedule": typeof HomeScheduleRoute;
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/dashboard'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/dashboard'
-  id: '__root__' | '/' | '/_home' | '/_home/dashboard'
-  fileRoutesById: FileRoutesById
+	fileRoutesByFullPath: FileRoutesByFullPath;
+	fullPaths: "/" | "" | "/dashboard" | "/schedule";
+	fileRoutesByTo: FileRoutesByTo;
+	to: "/" | "" | "/dashboard" | "/schedule";
+	id: "__root__" | "/" | "/_home" | "/_home/dashboard" | "/_home/schedule";
+	fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  HomeRoute: typeof HomeRouteWithChildren
+	IndexRoute: typeof IndexRoute;
+	HomeRoute: typeof HomeRouteWithChildren;
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  HomeRoute: HomeRouteWithChildren,
-}
+	IndexRoute: IndexRoute,
+	HomeRoute: HomeRouteWithChildren,
+};
 
 export const routeTree = rootRoute
-  ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+	._addFileChildren(rootRouteChildren)
+	._addFileTypes<FileRouteTypes>();
 
 /* prettier-ignore-end */
 
@@ -132,11 +150,16 @@ export const routeTree = rootRoute
     "/_home": {
       "filePath": "_home.tsx",
       "children": [
-        "/_home/dashboard"
+        "/_home/dashboard",
+        "/_home/schedule"
       ]
     },
     "/_home/dashboard": {
       "filePath": "_home/dashboard.tsx",
+      "parent": "/_home"
+    },
+    "/_home/schedule": {
+      "filePath": "_home/schedule.tsx",
       "parent": "/_home"
     }
   }

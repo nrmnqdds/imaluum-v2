@@ -10,43 +10,43 @@ import ImaluumProvider from "~/components/providers/imaluum-provider";
  * and redirects them to the home if they dont.
  */
 const getSession = createServerFn("GET", async () => {
-  const headers = getHeaders();
+	const headers = getHeaders();
 
-  if (!headers.cookie) {
-    throw redirect({
-      to: "/",
-    });
-  }
+	if (!headers.cookie) {
+		throw redirect({
+			to: "/",
+		});
+	}
 
-  const cookies = headers.cookie.split("; ");
+	const cookies = headers.cookie.split("; ");
 
-  if (cookies.length === 0) {
-    throw redirect({
-      to: "/",
-    });
-  }
+	if (cookies.length === 0) {
+		throw redirect({
+			to: "/",
+		});
+	}
 
-  const token = cookies.find((cookie) => cookie.startsWith("MOD_AUTH_CAS="));
+	const token = cookies.find((cookie) => cookie.startsWith("MOD_AUTH_CAS="));
 
-  if (!token) {
-    throw redirect({
-      to: "/",
-    });
-  }
+	if (!token) {
+		throw redirect({
+			to: "/",
+		});
+	}
 
-  return;
+	return;
 });
 
 export const Route = createFileRoute("/_home")({
-  component: () => {
-    return (
-      <ImaluumProvider>
-        <Sidebar>
-          <Outlet />
-        </Sidebar>
-        <FinancialDialog />
-      </ImaluumProvider>
-    );
-  },
-  beforeLoad: async () => await getSession(),
+	component: () => {
+		return (
+			<ImaluumProvider>
+				<Sidebar>
+					<Outlet />
+				</Sidebar>
+				<FinancialDialog />
+			</ImaluumProvider>
+		);
+	},
+	beforeLoad: async () => await getSession(),
 });

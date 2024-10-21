@@ -6,11 +6,9 @@
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
-    "build:cf": "vinxi build --preset cloudflare-pages",
     "start": "vinxi start",
     "lint": "biome lint --write --unsafe ./app/",
-    "format": "biome format --write ./app/",
-    "deploy:cf": "npx wrangler pages deploy ./dist/"
+    "format": "biome format --write ./app/"
   },
   "keywords": [],
   "author": "",

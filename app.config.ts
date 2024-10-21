@@ -6,7 +6,7 @@ export default defineConfig({
     preset: "cloudflare-pages",
   },
   vite: {
-    plugins: () => [
+    plugins: [
       tsConfigPaths({
         projects: ["./tsconfig.json"],
       }),

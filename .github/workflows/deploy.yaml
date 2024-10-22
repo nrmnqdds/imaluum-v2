@@ -1,8 +1,8 @@
 name: Deploy Images to EC2
 on:
   push:
-    tags:
-      - "*"
+    branches:
+      - main
   workflow_dispatch:
 jobs:
   push-store-image:

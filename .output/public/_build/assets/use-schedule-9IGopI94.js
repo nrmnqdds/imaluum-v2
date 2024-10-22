@@ -1,1 +1,0 @@
-import{c as a,p as r,a as t}from"./middleware-DHmCgB25.js";const o=a(r(e=>({schedule:[],setSchedule:s=>e({schedule:s}),reset:()=>e({schedule:[]})}),{name:"schedule-storage",storage:t(()=>sessionStorage)}));export{o as u};

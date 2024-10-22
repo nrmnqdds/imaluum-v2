@@ -22,6 +22,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 		],
 		component: RootComponent,
 		links: () => [{ rel: "stylesheet", href: appCss }],
+		scripts: () => [
+			{
+				src: "https://umami.mallam.chat/getinfo",
+				type: "module",
+				defer: true,
+				dataWebsiteId: "45609499-5b7c-451e-9683-4ef520bae636",
+			},
+		],
 	},
 );
 

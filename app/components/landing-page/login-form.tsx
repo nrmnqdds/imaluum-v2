@@ -44,8 +44,6 @@ const LoginForm = () => {
 
     const json = (await res.body.json()) as unknown as TLoginResponse;
 
-    deleteCookie("MOD_AUTH_CAS");
-
     setCookie("MOD_AUTH_CAS", json.data.token, {
       // Expires in 30 minutes
       expires: new Date(Date.now() + 30 * 60 * 1000),

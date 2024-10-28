@@ -9,6 +9,7 @@ import useResult from "~/hooks/use-result";
 import useSchedule from "~/hooks/use-schedule";
 import { deleteCookie, setCookie } from "vinxi/http";
 import { request } from "undici";
+import { BACKEND_URL } from "~/constants";
 
 type TLoginResponse = {
   status: number;
@@ -34,7 +35,7 @@ const LoginForm = () => {
   const router = useRouter();
 
   const loginUser = createServerFn("POST", async (credentials: Credentials) => {
-    const res = await request("https://api.nrmnqdds.com/api/login", {
+    const res = await request(`${BACKEND_URL}/api/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

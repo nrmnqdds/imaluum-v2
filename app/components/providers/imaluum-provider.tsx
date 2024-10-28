@@ -12,6 +12,7 @@ import type { Sessions } from "~/types/schedule";
 import type { StudentInfo } from "~/types/student";
 import { GetResult } from "~/utils/scraper/result";
 import { GetToken } from "~/utils/token";
+import { BACKEND_URL } from "~/constants";
 
 type TProfileResponse = {
 	status: number;
@@ -45,7 +46,7 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 				});
 			}
 
-			const res = await fetch("https://api.nrmnqdds.com/api/profile", {
+			const res = await fetch(`${BACKEND_URL}/api/profile`, {
 				credentials: "include",
 				headers: {
 					"Content-Type": "application/json",
@@ -95,7 +96,7 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 				});
 			}
 
-			const res = await fetch("https://api.nrmnqdds.com/api/schedule", {
+			const res = await fetch(`${BACKEND_URL}/api/schedule`, {
 				credentials: "include",
 				headers: {
 					"Content-Type": "application/json",

@@ -4,6 +4,7 @@ import { Image } from "@unpic/react";
 import { TvIcon, LinkIcon } from "@heroicons/react/24/outline";
 import type { Advertisement as TAds } from "~/types/ads";
 import { createServerFn } from "@tanstack/start";
+import { BACKEND_URL } from "~/constants";
 
 type TAdsResponse = {
   status: number;
@@ -13,7 +14,7 @@ type TAdsResponse = {
 
 export const Advertisement = ({ className }: { className: string }) => {
   const fetchAds = createServerFn("GET", async (): Promise<TAds[] | null> => {
-    const res = await fetch("https://api.nrmnqdds.com/api/ads");
+    const res = await fetch(`${BACKEND_URL}/api/ads`);
 
     if (!res.ok) {
       console.log("ads error: ", res);

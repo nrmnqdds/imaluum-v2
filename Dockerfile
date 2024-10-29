@@ -1,5 +1,5 @@
 FROM node:20-alpine AS base
-LABEL org.opencontainers.image.source = "https://github.com/nrmnqdds/imaluum-v2"
+LABEL org.opencontainers.image.source="https://github.com/nrmnqdds/imaluum-v2"
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"

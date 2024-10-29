@@ -1,6 +1,5 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import LoginForm from "~/components/landing-page/login-form";
-import LOGO from "~/assets/logo-landing-page.png";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Image } from "@unpic/react";
 import { ThemeSwitcher } from "~/components/shared/theme-switcher";
@@ -84,7 +83,7 @@ function Home() {
             width={48}
             height={48}
             className="object-contain"
-            src={LOGO}
+            src="/logo-landing-page.png"
             alt="Your Company"
           />
           <div className="mt-24 sm:mt-32 lg:mt-16">

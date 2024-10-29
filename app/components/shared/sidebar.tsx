@@ -36,12 +36,6 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 
 	return (
 		<div>
-			<div className="w-full flex items-center justify-center bg-primary py-1 px-2">
-				<h1 className="drop-shadow text-accent text-[10px] sm:text-sm">
-					Incorrect data? Refresh! Sometimes the scraper misses. Sorry for the
-					inconvenience. UIA pls support.
-				</h1>
-			</div>
 			<Transition show={sidebarOpen} as={Fragment}>
 				<Dialog
 					as="div"

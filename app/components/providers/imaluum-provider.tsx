@@ -124,10 +124,11 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 					if (!res) {
 						throw new Error("Profile not found");
 					}
+					console.log("profile res: ", res);
 					setProfile(res);
 					return res;
 				},
-				enabled: !profile,
+				enabled: !profile?.name,
 				retry: 3,
 			},
 			{

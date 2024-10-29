@@ -12,7 +12,7 @@ const ResultSwitcher = ({
   setEvents,
   courses,
 }: {
-  setEvents: (events: Pick<Result, "result">) => void;
+  setEvents: (events: Result) => void;
   courses: Result[];
 }) => {
   const [selected, setSelected] = useState(courses[0]?.session_name);
@@ -21,7 +21,12 @@ const ResultSwitcher = ({
     setSelected(value);
 
     const course = courses.find((course) => course.session_name === value);
-    setEvents({ result: course?.result || [] });
+
+    if (!course) return;
+
+    console.log(course);
+
+    setEvents(course);
   };
 
   return (

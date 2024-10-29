@@ -23,7 +23,7 @@ export default function ProfileDropdown() {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <MenuButton className="">
+        <MenuButton className="flex items-center justify-center flex-row-reverse gap-2">
           <Image
             alt="profile pic"
             // src={`data:image/jpeg;base64,${btoa(profile.image_url)}`}

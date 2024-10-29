@@ -17,23 +17,39 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 			},
 			{
 				title: "Simplified i-Ma'luum",
-				description: "A simplified version of i-Ma'luum for students.",
+				description: "A simplified version of i-Ma'luum for IIUM students.",
 			},
 			{
 				rel: "icon",
 				href: "/favicon.ico",
 			},
+			{ name: "twitter:title", content: "Simplified i-Ma'luum" },
+			{
+				name: "twitter:description",
+				content: "A simplified version of i-Ma'luum for IIUM students.",
+			},
+			{ name: "twitter:creator", content: "@nrmnqdds" },
+			{ name: "twitter:site", content: "@nrmnqdds" },
+			{ name: "og:type", content: "website" },
+			{ name: "og:title", content: "Simplified i-Ma'luum" },
+			{
+				name: "og:description",
+				content: "A simplified version of i-Ma'luum for IIUM students. ",
+			},
+			{ name: "twitter:image", content: "/og.png" },
+			{ name: "twitter:card", content: "summary_large_image" },
+			{ name: "og:image", content: "/og.png" },
 		],
 		component: RootComponent,
 		links: () => [{ rel: "stylesheet", href: appCss }],
-		// scripts: () => [
-		// 	{
-		// 		src: "https://umami.mallam.chat/getinfo",
-		// 		type: "module",
-		// 		defer: true,
-		// 		datawebsiteid: "45609499-5b7c-451e-9683-4ef520bae636",
-		// 	},
-		// ],
+		scripts: () => [
+			{
+				src: "https://umami.mallam.chat/getinfo",
+				type: "module",
+				defer: true,
+				datawebsiteid: "795bd0d4-df9f-40ae-9298-8ba6d5f9f734",
+			},
+		],
 	},
 );
 

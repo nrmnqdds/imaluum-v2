@@ -32,7 +32,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@nrmnqdds" },
       {
         name: "twitter:image",
-        content: "https://r2.studyjom.nrmnqdds.com/og.png",
+        content: "https://r2.studyjom.nrmnqdds.com/imaluumv2ogcompressed.png",
         itemProp: "image",
       },
       { name: "twitter:card", content: "summary_large_image" },
@@ -42,11 +42,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         name: "og:image",
-        content: "https://r2.studyjom.nrmnqdds.com/og.png",
+        content: "https://r2.studyjom.nrmnqdds.com/imaluumv2ogcompressed.png",
         itemProp: "image",
       },
       { name: "og:type", content: "website" },
       { name: "og:title", content: "Simplified i-Ma'luum" },
+      { name: "og:url", content: "https://imaluum.quddus.my" },
+      {
+        name: "msapplication-TileImage",
+        content: "https://r2.studyjom.nrmnqdds.com/imaluumv2ogcompressed.png",
+      },
     ],
     component: RootComponent,
     links: () => [{ rel: "stylesheet", href: appCss }],

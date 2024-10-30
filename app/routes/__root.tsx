@@ -30,13 +30,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { name: "twitter:creator", content: "@nrmnqdds" },
       { name: "twitter:site", content: "@nrmnqdds" },
-      { name: "twitter:image", content: "/og.png" },
+      {
+        name: "twitter:image",
+        content: "https://r2.studyjom.nrmnqdds.com/og.png",
+        itemProp: "image",
+      },
       { name: "twitter:card", content: "summary_large_image" },
       {
         name: "og:description",
         content: "A simplified version of i-Ma'luum for IIUM students. ",
       },
-      { name: "og:image", content: "/og.png" },
+      {
+        name: "og:image",
+        content: "https://r2.studyjom.nrmnqdds.com/og.png",
+        itemProp: "image",
+      },
       { name: "og:type", content: "website" },
       { name: "og:title", content: "Simplified i-Ma'luum" },
     ],

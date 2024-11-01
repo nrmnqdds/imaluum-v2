@@ -57,10 +57,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: () => [{ rel: "stylesheet", href: appCss }],
     scripts: () => [
       {
-        src: "https://umami.mallam.chat/getinfo",
-        type: "module",
-        defer: true,
-        datawebsiteid: "795bd0d4-df9f-40ae-9298-8ba6d5f9f734",
+        src: "https://beamanalytics.b-cdn.net/beam.min.js",
+        async: true,
+        datatoken: "09a05d6b-9ccf-4902-8ad0-e623689d586a",
       },
     ],
   },

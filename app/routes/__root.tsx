@@ -74,6 +74,10 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  console.log(
+    "%c Make iMaluum Great Again",
+    'font-size: 5rem; text-align: center; color: #fcedd8; font-family: "Niconne", cursive; font-weight: 700; text-shadow: 5px 5px 0px #eb452b, 8px 8px 0px #efa032, 11px 11px 0px #46b59b, 14px 14px 0px #017e7f, 17px 17px 0px #052939;',
+  );
   return (
     <Html lang="en">
       <Head>

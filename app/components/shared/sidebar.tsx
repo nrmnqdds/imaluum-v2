@@ -20,9 +20,14 @@ import { cn } from "~/utils/cn";
 import Clock from "./clock";
 
 const navigation = [
-	{ name: "Dashboard", href: "/dashboard", icon: HomeIcon },
-	{ name: "Class Timetable", href: "/schedule", icon: CalendarIcon },
-	// { name: "Exam Results", href: "/result", icon: FlagIcon },
+	{ name: "Dashboard", href: "/dashboard", icon: HomeIcon, disabled: false },
+	{
+		name: "Class Timetable",
+		href: "/schedule",
+		icon: CalendarIcon,
+		disabled: false,
+	},
+	{ name: "Exam Results", href: "/result", icon: FlagIcon, disabled: true },
 ];
 
 export default function Sidebar({ children }: { children: React.ReactNode }) {
@@ -105,11 +110,13 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 													{navigation.map((item) => (
 														<li key={item.name}>
 															<a
-																href={item.href}
+																href={item.disabled ? "#" : item.href}
 																className={cn(
 																	pathname === item.href
 																		? "bg-gray-50 text-primary"
 																		: "text-gray-700 hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-800",
+																	item.disabled &&
+																		"opacity-50 cursor-not-allowed",
 																	"group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
 																)}
 															>
@@ -163,10 +170,13 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 														to: item.href,
 													})
 												}
+												disabled={item.disabled}
 												className={cn(
 													pathname === item.href
 														? "bg-secondary text-primary"
 														: "text-foreground hover:text-primary hover:bg-accent",
+													item.disabled &&
+														"opacity-50 cursor-not-allowed hover:bg-transparent hover:text-foreground",
 													"group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold w-full",
 												)}
 											>
@@ -175,6 +185,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 														pathname === item.href
 															? "text-primary"
 															: "text-accent group-hover:text-primary",
+														item.disabled && "group-hover:text-foreground",
 														"h-6 w-6 shrink-0",
 													)}
 													aria-hidden="true"

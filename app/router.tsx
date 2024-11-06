@@ -5,7 +5,14 @@ import { NotFound } from "./components/shared/not-found";
 import { routeTree } from "./routeTree.gen";
 
 export function createRouter() {
-	const queryClient = new QueryClient();
+	const queryClient = new QueryClient({
+		defaultOptions: {
+			queries: {
+				retry: 3,
+				refetchOnWindowFocus: false,
+			},
+		},
+	});
 
 	const router = createTanStackRouter({
 		routeTree,

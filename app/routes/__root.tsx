@@ -5,6 +5,15 @@ import { Body, Head, Html, Meta, Scripts } from "@tanstack/start";
 import appCss from "~/styles/app.css?url";
 import type { QueryClient } from "@tanstack/react-query";
 
+// const queryClient = new QueryClient({
+//   defaultOptions: {
+//     queries: {
+//       retry: 3,
+//       refetchOnWindowFocus: false,
+//     }
+//   }
+// });
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 	{
 		meta: () => [

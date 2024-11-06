@@ -25,6 +25,11 @@ export const Route = createFileRoute("/_home")({
 	component: () => {
 		return (
 			<ImaluumProvider>
+				<header className="top-0 bg-primary w-full flex items-center justify-center">
+					<p className="text-foreground animate-marquee">
+						Result section is under construction. Please be passion.
+					</p>
+				</header>
 				<Sidebar>
 					<Outlet />
 				</Sidebar>

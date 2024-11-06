@@ -47,7 +47,6 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 					return res;
 				},
 				enabled: !profile?.name,
-				retry: 3,
 			},
 			// {
 			// 	queryKey: ["result"],
@@ -88,7 +87,6 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 					setSchedule(tweakedSchedule);
 					return res;
 				},
-				retry: 3,
 				enabled: !schedule?.length,
 			},
 		],

@@ -15,180 +15,184 @@ import { GetToken } from "~/utils/token";
 import { BACKEND_URL } from "~/constants";
 
 type TProfileResponse = {
-	status: number;
-	message: string;
-	data: {
-		image_url: string;
-		name: string;
-		matric_no: string;
-	};
+  status: number;
+  message: string;
+  data: {
+    image_url: string;
+    name: string;
+    matric_no: string;
+  };
 };
 
 type TScheduleResponse = {
-	status: number;
-	message: string;
-	data: Sessions[];
+  status: number;
+  message: string;
+  data: Sessions[];
 };
 
 const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
-	const { profile, setProfile } = useProfile();
-	const { result, setResult } = useResult();
-	const { schedule, setSchedule } = useSchedule();
+  const { profile, setProfile } = useProfile();
+  const { result, setResult } = useResult();
+  const { schedule, setSchedule } = useSchedule();
 
-	const fetchProfile = createServerFn(
-		"GET",
-		async (): Promise<StudentInfo | null> => {
-			const token = GetToken();
+  const fetchProfile = createServerFn(
+    "GET",
+    async (): Promise<StudentInfo | null> => {
+      const token = GetToken();
 
-			if (!token) {
-				throw redirect({
-					to: "/",
-				});
-			}
+      if (!token) {
+        throw redirect({
+          to: "/",
+        });
+      }
 
-			const res = await fetch(`${BACKEND_URL}/api/profile`, {
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json",
-					Cookie: `MOD_AUTH_CAS=${token}`,
-				},
-			});
+      const res = await fetch(`${BACKEND_URL}/api/profile`, {
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `MOD_AUTH_CAS=${token}`,
+        },
+      });
 
-			if (!res.ok) {
-				console.log("profile error: ", res);
-				return null;
-			}
+      if (!res.ok) {
+        console.log("profile error: ", res);
+        return null;
+      }
 
-			const json = (await res.json()) as unknown as TProfileResponse;
+      const json = (await res.json()) as unknown as TProfileResponse;
 
-			return json.data;
-		},
-	);
+      return json.data;
+    },
+  );
 
-	const fetchResult = createServerFn("GET", async () => {
-		const token = GetToken();
+  const fetchResult = createServerFn("GET", async () => {
+    const token = GetToken();
 
-		if (!token) {
-			throw redirect({
-				to: "/",
-			});
-		}
-		const res = await GetResult(token);
+    if (!token) {
+      throw redirect({
+        to: "/",
+      });
+    }
+    const res = await GetResult(token);
 
-		if (res.error || !res.data) {
-			console.log("result error: ", res);
-			return null;
-		}
+    if (res.error || !res.data) {
+      console.log("result error: ", res);
+      return null;
+    }
 
-		const json = res.data;
+    const json = res.data;
 
-		return json;
-	});
+    return json;
+  });
 
-	const fetchSchedule = createServerFn(
-		"GET",
-		async (): Promise<Sessions[] | null> => {
-			const token = GetToken();
+  const fetchSchedule = createServerFn(
+    "GET",
+    async (): Promise<Sessions[] | null> => {
+      const token = GetToken();
 
-			if (!token) {
-				throw redirect({
-					to: "/",
-				});
-			}
+      if (!token) {
+        throw redirect({
+          to: "/",
+        });
+      }
 
-			const res = await fetch(`${BACKEND_URL}/api/schedule`, {
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json",
-					Cookie: `MOD_AUTH_CAS=${token}`,
-				},
-			});
+      const res = await fetch(`${BACKEND_URL}/api/schedule`, {
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `MOD_AUTH_CAS=${token}`,
+        },
+      });
 
-			if (!res.ok) {
-				console.log("schedule error: ", res);
-				return null;
-			}
+      if (!res.ok) {
+        console.log("schedule error: ", res);
+        return null;
+      }
 
-			const json = (await res.json()) as unknown as TScheduleResponse;
+      const json = (await res.json()) as unknown as TScheduleResponse;
 
-			return json.data;
-		},
-	);
+      return json.data;
+    },
+  );
 
-	const fetchImaluum = useQueries({
-		queries: [
-			{
-				queryKey: ["profile"],
-				queryFn: async () => {
-					const res = await fetchProfile();
-					if (!res) {
-						throw new Error("Profile not found");
-					}
-					console.log("profile res: ", res);
-					setProfile(res);
-					return res;
-				},
-				enabled: !profile?.name,
-				retry: 3,
-			},
-			{
-				queryKey: ["result"],
-				queryFn: async () => {
-					const res = await fetchResult();
-					if (!res) {
-						throw new Error("Result not found");
-					}
-					setResult(res);
-					return res;
-				},
-				retry: 3,
-				enabled: !result?.length,
-			},
-			{
-				queryKey: ["schedule"],
-				queryFn: async () => {
-					const res = await fetchSchedule();
-					if (!res) {
-						throw new Error("Schedule not found");
-					}
-					const tweakedSchedule = res.map((item) => {
-						return {
-							...item,
-							schedule: item.schedule.map((schedule) => {
-								return {
-									...schedule,
-									color:
-										schedule.color ||
-										predefinedColors[
-											Math.floor(Math.random() * predefinedColors.length)
-										],
-								};
-							}),
-						};
-					});
+  const fetchImaluum = useQueries({
+    queries: [
+      {
+        queryKey: ["profile"],
+        queryFn: async () => {
+          const res = await fetchProfile();
+          if (!res) {
+            throw new Error("Profile not found");
+          }
+          console.log("profile res: ", res);
+          setProfile(res);
+          return res;
+        },
+        enabled: !profile?.name,
+        retry: 3,
+      },
+      // {
+      // 	queryKey: ["result"],
+      // 	queryFn: async () => {
+      // 		const res = await fetchResult();
+      // 		if (!res) {
+      // 			throw new Error("Result not found");
+      // 		}
+      // 		setResult(res);
+      // 		return res;
+      // 	},
+      // 	retry: 3,
+      // 	enabled: !result?.length,
+      // },
+      {
+        queryKey: ["schedule"],
+        queryFn: async () => {
+          const res = await fetchSchedule();
+          if (!res) {
+            throw new Error("Schedule not found");
+          }
+          const tweakedSchedule = res.map((item) => {
+            return {
+              ...item,
+              schedule: item.schedule.map((schedule) => {
+                return {
+                  ...schedule,
+                  color:
+                    schedule.color ||
+                    predefinedColors[
+                      Math.floor(Math.random() * predefinedColors.length)
+                    ],
+                };
+              }),
+            };
+          });
 
-					setSchedule(tweakedSchedule);
-					return res;
-				},
-				retry: 3,
-				enabled: !schedule?.length,
-			},
-		],
-	});
+          setSchedule(tweakedSchedule);
+          return res;
+        },
+        retry: 3,
+        enabled: !schedule?.length,
+      },
+    ],
+  });
 
-	if (fetchImaluum.some((query) => query.isLoading)) {
-		return <LoadingScreen />;
-	}
+  if (fetchImaluum.some((query) => query.isLoading)) {
+    return <LoadingScreen />;
+  }
 
-	if (fetchImaluum.some((query) => query.isError)) {
-		return <NotFound />;
-	}
+  if (fetchImaluum.some((query) => query.isError)) {
+    return <NotFound />;
+  }
 
-	if (profile && result?.length !== 0 && schedule?.length !== 0) {
-		return children;
-	}
+  // if (profile && result?.length !== 0 && schedule?.length !== 0) {
+  //   return children;
+  // }
 
-	return <NotFound />;
+  if (profile && schedule?.length !== 0) {
+    return children;
+  }
+
+  return <NotFound />;
 };
 
 export default ImaluumProvider;

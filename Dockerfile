@@ -24,6 +24,7 @@ ENV NODE_ENV=production
 RUN pnpm run build
 
 FROM base AS runner
-COPY --from=builder /app/.output ./output
+COPY --from=builder /app/.output ./.output
+COPY --from=builder /app/.vinxi ./.vinxi
 EXPOSE 3000
-CMD ["node", "./output/server/index.mjs"]
+CMD ["node", "./.output/server/index.mjs"]

@@ -1,21 +1,21 @@
-import type React from "react";
+import React from "react";
+import { cn } from "~/utils/cn";
 
-const Card = ({
-	className = "",
-	children,
-	...props
-}: {
-	className?: string;
-	children: React.ReactNode;
-}) => {
-	return (
-		<div
-			className={`row-span-1 rounded-xl border border-border bg-background p-4 ${className}`}
-			{...props}
-		>
-			{children}
-		</div>
-	);
-};
+const Card = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ children, className, ...props }, ref) => {
+  return (
+    <div
+      className={cn(
+        "row-span-1 rounded-xl border border-border bg-background p-4",
+      )}
+      ref={ref}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+});
 
 export default Card;

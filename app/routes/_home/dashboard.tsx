@@ -6,15 +6,39 @@ import {
   UsersIcon,
 } from "@heroicons/react/20/solid";
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { Advertisement } from "~/components/dashboard/advertisement";
-import BentoLayout from "~/components/dashboard/bento";
+import CGPAChart from "~/components/dashboard/cgpa-chart";
 import { Button } from "~/components/shared/button";
 import Card from "~/components/shared/card";
-import ProgressBar from "~/components/shared/progressbar";
 import useProfile from "~/hooks/use-profile";
+import useSchedule from "~/hooks/use-schedule";
+import type { Schedule, Timestamp } from "~/types/schedule";
 
 const DashboardPage = () => {
   const { profile } = useProfile();
+  const { schedule } = useSchedule();
+
+  const todayCourses = useMemo(() => {
+    const currentDay = new Date().getDay();
+
+    const latestSession = schedule[0];
+
+    const todaysCourses = latestSession.schedule
+      .map((course) => {
+        const todayTimestamp = course.timestamps.find(
+          (t) => t.day === currentDay,
+        );
+        return todayTimestamp ? { ...course, timestamp: todayTimestamp } : null;
+      })
+      .filter(
+        (course): course is Schedule & { timestamp: Timestamp } =>
+          course !== null,
+      )
+      .sort((a, b) => a.timestamp.start.localeCompare(b.timestamp.start));
+
+    return todaysCourses;
+  }, [schedule]);
 
   return (
     <section className="flex min-h-screen flex-col px-4 py-10 sm:px-6 lg:px-8">
@@ -50,107 +74,38 @@ const DashboardPage = () => {
                 Today&apos;s course
               </h2>
               <div className="space-y-4">
-                <Card>
-                  <div className="flex gap-4 p-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                      <BellIcon className="h-6 w-6 text-green-600" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="mb-2 flex items-center justify-between">
-                        <h3 className="font-semibold">Biology Molecular</h3>
-                        <span className="text-sm text-green-600">79%</span>
+                {todayCourses.map((course) => (
+                  <Card key={course.id}>
+                    <div className="flex gap-4 p-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+                        <BellIcon className="h-6 w-6 text-green-600" />
                       </div>
-                      <ProgressBar value={79} className="mb-2" />
-                      <div className="grid grid-cols-3 text-sm text-gray-500">
-                        <div className="flex items-center gap-1">
-                          <BookOpenIcon className="h-4 w-4" />
-                          21 lesson
+                      <div className="flex-1">
+                        <div className="mb-2 flex items-center justify-between">
+                          <h3 className="font-semibold">
+                            {course.course_name}
+                          </h3>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <ClockIcon className="h-4 w-4" />
-                          50 min
+                        <div className="flex flex-col text-sm text-gray-500">
+                          <div className="flex items-center gap-1">
+                            <BookOpenIcon className="h-4 w-4" />
+                            {course.chr} credit hours
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <ClockIcon className="h-4 w-4" />
+                            {course.venue}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <UsersIcon className="h-4 w-4" />
+                            {course.lecturer}
+                          </div>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <UsersIcon className="h-4 w-4" />
-                          312 students
-                        </div>
-                      </div>
-                      <div className="mt-4 flex gap-2">
-                        <Button>Skip</Button>
-                        <Button>Continue</Button>
                       </div>
                     </div>
-                  </div>
-                </Card>
-                <Card>
-                  <div className="flex gap-4 p-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100">
-                      <BookOpenIcon className="h-6 w-6 text-purple-600" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="mb-2 flex items-center justify-between">
-                        <h3 className="font-semibold">Color Theory</h3>
-                        <span className="text-sm text-purple-600">64%</span>
-                      </div>
-                      <ProgressBar value={64} className="mb-2" />
-                      <div className="grid grid-cols-3 text-sm text-gray-500">
-                        <div className="flex items-center gap-1">
-                          <BookOpenIcon className="h-4 w-4" />
-                          10 lesson
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <ClockIcon className="h-4 w-4" />
-                          45 min
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <UsersIcon className="h-4 w-4" />
-                          256 students
-                        </div>
-                      </div>
-                      <div className="mt-4 flex gap-2">
-                        <Button>Skip</Button>
-                        <Button>Continue</Button>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
+                  </Card>
+                ))}
               </div>
             </div>
-            {/* <div> */}
-            {/*   <h2 className="mb-4 text-xl font-semibold">Your class</h2> */}
-            {/*   <Tabs defaultValue="all"> */}
-            {/*     <TabsList> */}
-            {/*       <TabsTrigger value="all">All</TabsTrigger> */}
-            {/*       <TabsTrigger value="design">Design</TabsTrigger> */}
-            {/*       <TabsTrigger value="science">Science</TabsTrigger> */}
-            {/*       <TabsTrigger value="coding">Coding</TabsTrigger> */}
-            {/*     </TabsList> */}
-            {/*   </Tabs> */}
-            {/*   <Card className="mt-4"> */}
-            {/*     <CardContent className="flex gap-4 p-4"> */}
-            {/*       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100"> */}
-            {/*         <Virus className="h-6 w-6 text-green-600" /> */}
-            {/*       </div> */}
-            {/*       <div className="flex-1"> */}
-            {/*         <h3 className="font-semibold">Microbiology Society</h3> */}
-            {/*         <div className="grid grid-cols-3 text-sm text-gray-500"> */}
-            {/*           <div className="flex items-center gap-1"> */}
-            {/*             <Book className="h-4 w-4" /> */}
-            {/*             10 lesson */}
-            {/*           </div> */}
-            {/*           <div className="flex items-center gap-1"> */}
-            {/*             <Clock className="h-4 w-4" /> */}
-            {/*             45 min */}
-            {/*           </div> */}
-            {/*           <div className="flex items-center gap-1"> */}
-            {/*             <Users className="h-4 w-4" /> */}
-            {/*             256 students */}
-            {/*           </div> */}
-            {/*         </div> */}
-            {/*       </div> */}
-            {/*     </CardContent> */}
-            {/*   </Card> */}
-            {/* </div> */}
           </div>
           <div className="space-y-4">
             <Card className="p-4">
@@ -211,51 +166,11 @@ const DashboardPage = () => {
             <Card>
               <div className="p-4">
                 <div className="mb-4 flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">Learning activity</h3>
-                  <Button>
-                    1 3rd semester
-                    <ChevronDownIcon className="ml-2 h-4 w-4" />
-                  </Button>
+                  <h3 className="text-lg font-semibold">Result Progress</h3>
                 </div>
-                <div className="flex gap-4 text-sm">
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-blue-500" />
-                    Materials
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-pink-500" />
-                    Exams
-                  </div>
-                </div>
-                {/* <div className="h-[200px] w-full"> */}
-                {/*   <ResponsiveContainer width="100%" height="100%"> */}
-                {/*     <LineChart data={activityData}> */}
-                {/*       <XAxis */}
-                {/*         dataKey="month" */}
-                {/*         stroke="#888888" */}
-                {/*         fontSize={12} */}
-                {/*         tickLine={false} */}
-                {/*         axisLine={false} */}
-                {/*       /> */}
-                {/*       <Line */}
-                {/*         type="monotone" */}
-                {/*         strokeWidth={2} */}
-                {/*         dataKey="materials" */}
-                {/*         stroke="#2563eb" */}
-                {/*         dot={false} */}
-                {/*         style={{ opacity: 0.5 }} */}
-                {/*       /> */}
-                {/*       <Line */}
-                {/*         type="monotone" */}
-                {/*         strokeWidth={2} */}
-                {/*         dataKey="exams" */}
-                {/*         stroke="#ec4899" */}
-                {/*         dot={false} */}
-                {/*         style={{ opacity: 0.5 }} */}
-                {/*       /> */}
-                {/*     </LineChart> */}
-                {/*   </ResponsiveContainer> */}
-                {/* </div> */}
+                <Card className="col-span-2">
+                  <CGPAChart />
+                </Card>
               </div>
             </Card>
           </div>

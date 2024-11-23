@@ -1,7 +1,6 @@
 import {
 	BellIcon,
 	BookOpenIcon,
-	ChevronDownIcon,
 	ClockIcon,
 	DocumentChartBarIcon,
 	DocumentTextIcon,

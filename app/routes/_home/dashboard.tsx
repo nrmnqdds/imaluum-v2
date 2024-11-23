@@ -3,6 +3,8 @@ import {
   BookOpenIcon,
   ChevronDownIcon,
   ClockIcon,
+  DocumentChartBarIcon,
+  DocumentTextIcon,
   UsersIcon,
 } from "@heroicons/react/20/solid";
 import { createFileRoute } from "@tanstack/react-router";
@@ -12,12 +14,27 @@ import CGPAChart from "~/components/dashboard/cgpa-chart";
 import { Button } from "~/components/shared/button";
 import Card from "~/components/shared/card";
 import useProfile from "~/hooks/use-profile";
+import useResult from "~/hooks/use-result";
 import useSchedule from "~/hooks/use-schedule";
 import type { Schedule, Timestamp } from "~/types/schedule";
 
 const DashboardPage = () => {
   const { profile } = useProfile();
   const { schedule } = useSchedule();
+  const { result } = useResult();
+
+  const todayCreditHours = useMemo(() => {
+    let creditHours = 0.0;
+
+    for (const i of result) {
+      for (const ii of i.result) {
+        const floatchr = Number.parseFloat(ii.course_credit);
+        creditHours += floatchr;
+      }
+    }
+
+    return creditHours;
+  }, [result]);
 
   const todayCourses = useMemo(() => {
     const currentDay = new Date().getDay();
@@ -46,25 +63,6 @@ const DashboardPage = () => {
         <div className="grid gap-4 md:grid-cols-2">
           <div>
             <h1 className="text-3xl font-bold">Hello, {profile.name} 👋</h1>
-            <p className="text-gray-500">
-              Nice to have you back, what an exciting day! Get ready and
-              continue your lesson today.
-            </p>
-          </div>
-          <div className="flex items-start justify-end gap-4">
-            <Button>
-              <BellIcon className="h-4 w-4" />
-            </Button>
-            <div className="flex items-center gap-4">
-              <div className="text-right">
-                <div className="text-lg font-semibold">2400 XP</div>
-                <div className="text-sm text-gray-500">Point</div>
-              </div>
-              <div className="flex gap-2">
-                <Button>Redeem</Button>
-                <Button>Collect Point</Button>
-              </div>
-            </div>
           </div>
         </div>
         <div className="grid gap-4 md:grid-cols-[2fr,3fr]">
@@ -74,41 +72,50 @@ const DashboardPage = () => {
                 Today&apos;s course
               </h2>
               <div className="space-y-4">
-                {todayCourses.map((course) => (
-                  <Card key={course.id}>
-                    <div className="flex gap-4 p-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                        <BellIcon className="h-6 w-6 text-green-600" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="mb-2 flex items-center justify-between">
-                          <h3 className="font-semibold">
-                            {course.course_name}
-                          </h3>
+                {todayCourses.length !== 0 ? (
+                  todayCourses.map((course) => (
+                    <Card key={course.id}>
+                      <div className="flex gap-4 p-4">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+                          <BellIcon className="h-6 w-6 text-green-600" />
                         </div>
-                        <div className="flex flex-col text-sm text-gray-500">
-                          <div className="flex items-center gap-1">
-                            <BookOpenIcon className="h-4 w-4" />
-                            {course.chr} credit hours
+                        <div className="flex-1">
+                          <div className="mb-2 flex items-center justify-between">
+                            <h3 className="font-semibold">
+                              {course.course_name}
+                            </h3>
                           </div>
-                          <div className="flex items-center gap-1">
-                            <ClockIcon className="h-4 w-4" />
-                            {course.venue}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <UsersIcon className="h-4 w-4" />
-                            {course.lecturer}
+                          <div className="flex flex-col text-sm text-gray-500">
+                            <div className="flex items-center gap-1">
+                              <BookOpenIcon className="h-4 w-4" />
+                              {course.chr} credit hours
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <ClockIcon className="h-4 w-4" />
+                              {course.venue}
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <UsersIcon className="h-4 w-4" />
+                              {course.lecturer}
+                            </div>
                           </div>
                         </div>
                       </div>
+                    </Card>
+                  ))
+                ) : (
+                  <Card>
+                    <div className="p-4 text-center">
+                      <p className="text-gray-500">No classes today!</p>
                     </div>
                   </Card>
-                ))}
+                )}
               </div>
             </div>
           </div>
           <div className="space-y-4">
-            <Card className="p-4">
+            <h2 className="mb-4 text-xl font-semibold">Personal Profile</h2>
+            <Card className="p-4 bg-zinc-900 border-zinc-800">
               <div className="mb-4 flex items-start justify-between">
                 <div className="flex gap-4">
                   <div className="h-16 w-16">
@@ -119,13 +126,17 @@ const DashboardPage = () => {
                     <p className="text-sm text-gray-500">{profile.matric_no}</p>
                     <div className="mt-4 flex gap-8">
                       <div>
-                        <div className="text-2xl font-bold">24</div>
-                        <div className="text-sm text-gray-500">Course</div>
+                        <div className="text-2xl font-bold">
+                          {profile.level.split(" ")[1]}
+                        </div>
+                        <div className="text-sm text-gray-500">Level</div>
                       </div>
                       <div>
-                        <div className="text-2xl font-bold">18</div>
+                        <div className="text-2xl font-bold">
+                          {todayCreditHours}
+                        </div>
                         <div className="text-sm text-gray-500">
-                          Certification
+                          Credit Hours
                         </div>
                       </div>
                     </div>
@@ -133,45 +144,31 @@ const DashboardPage = () => {
                 </div>
               </div>
               <div className="grid gap-4 md:grid-cols-2">
-                <Card className="bg-orange-100">
-                  <div className="p-4">
-                    <div className="mb-2 flex items-center justify-between">
-                      <ChevronDownIcon className="h-5 w-5" />
-                      <Button>
-                        <ChevronDownIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <h3 className="text-lg font-semibold">Consultation</h3>
-                    <p className="text-sm">
-                      Get a mentor to help your learning process
-                    </p>
-                  </div>
-                </Card>
-                <Card className="bg-purple-100">
-                  <div className="p-4">
-                    <div className="mb-2 flex items-center justify-between">
-                      <ChevronDownIcon className="h-5 w-5" />
-                      <Button>
-                        <ChevronDownIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <h3 className="text-lg font-semibold">Set target</h3>
-                    <p className="text-sm">
-                      Set target, reminders and your study timeline
-                    </p>
-                  </div>
-                </Card>
+                <a
+                  href="https://imaluum.iium.edu.my/MyAcademic/confirmation-sem"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  <Button className="bg-orange-400 border border-orange-600 hover:bg-orange-500 text-foreground w-full flex items-center justify-center">
+                    <DocumentTextIcon className="h-5 w-5" />
+                    <p>Confirmation Slip</p>
+                  </Button>
+                </a>
+                <a
+                  href="https://imaluum.iium.edu.my/examslip"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  <Button className="bg-purple-400 border border-purple-600 hover:bg-purple-500 text-foreground w-full flex items-center justify-center">
+                    <DocumentChartBarIcon className="h-5 w-5" />
+                    <p>Exam Slip</p>
+                  </Button>
+                </a>
               </div>
             </Card>
-            <Card>
-              <div className="p-4">
-                <div className="mb-4 flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">Result Progress</h3>
-                </div>
-                <Card className="col-span-2">
-                  <CGPAChart />
-                </Card>
-              </div>
+            <h2 className="mb-4 text-xl font-semibold">Result Progress</h2>
+            <Card className="bg-zinc-900 border-zinc-800">
+              <CGPAChart />
             </Card>
           </div>
         </div>

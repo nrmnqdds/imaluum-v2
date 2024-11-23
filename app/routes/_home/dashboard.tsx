@@ -115,7 +115,7 @@ const DashboardPage = () => {
 					</div>
 					<div className="space-y-4">
 						<h2 className="mb-4 text-xl font-semibold">Personal Profile</h2>
-						<Card className="p-4 bg-zinc-900 border-zinc-800">
+						<Card className="p-4 border-gray-200 dark:border-zinc-800">
 							<div className="mb-4 flex items-start justify-between">
 								<div className="flex gap-4">
 									<div className="h-16 w-16">
@@ -167,7 +167,7 @@ const DashboardPage = () => {
 							</div>
 						</Card>
 						<h2 className="mb-4 text-xl font-semibold">Result Progress</h2>
-						<Card className="bg-zinc-900 border-zinc-800">
+						<Card className="border-gray-200 dark:border-zinc-800">
 							<CGPAChart />
 						</Card>
 					</div>

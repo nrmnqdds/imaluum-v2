@@ -25,6 +25,12 @@ const DashboardPage = () => {
 	const todayCreditHours = useMemo(() => {
 		let creditHours = 0.0;
 
+    console.log("result", result);
+
+    if (result.length === 0) {
+      return creditHours;
+    }
+
 		for (const i of result) {
 			for (const ii of i.result) {
 				const floatchr = Number.parseFloat(ii.course_credit);

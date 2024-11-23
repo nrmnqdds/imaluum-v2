@@ -7,89 +7,88 @@ import useResult from "~/hooks/use-result";
 import useSchedule from "~/hooks/use-schedule";
 import { fetchSchedule } from "~/actions/schedule";
 import { fetchProfile } from "~/actions/profile";
-import { fetchResult } from "~/actions/result";
 
 const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
-	const { profile, setProfile } = useProfile();
-	const { schedule, setSchedule } = useSchedule();
-	const { result, setResult } = useResult();
+  const { profile, setProfile } = useProfile();
+  const { schedule, setSchedule } = useSchedule();
+  const { result, setResult } = useResult();
 
-	const fetchImaluum = useQueries({
-		queries: [
-			{
-				queryKey: ["profile"],
-				queryFn: async () => {
-					const res = await fetchProfile();
-					if (!res) {
-						throw new Error("Profile not found");
-					}
-					console.log("profile res: ", res);
-					setProfile(res);
-					return res;
-				},
-				enabled: !profile?.name,
-			},
-			{
-				queryKey: ["result"],
-				queryFn: async () => {
-					const res = await fetchResult();
-					if (!res) {
-						throw new Error("Result not found");
-					}
-					setResult(res);
-					return res;
-				},
-				retry: 3,
-				enabled: !result?.length,
-			},
-			{
-				queryKey: ["schedule"],
-				queryFn: async () => {
-					const res = await fetchSchedule();
-					if (!res) {
-						throw new Error("Schedule not found");
-					}
-					const tweakedSchedule = res.map((item) => {
-						return {
-							...item,
-							schedule: item.schedule.map((schedule) => {
-								return {
-									...schedule,
-									color:
-										schedule.color ||
-										predefinedColors[
-											Math.floor(Math.random() * predefinedColors.length)
-										],
-								};
-							}),
-						};
-					});
+  const fetchImaluum = useQueries({
+    queries: [
+      {
+        queryKey: ["profile"],
+        queryFn: async () => {
+          const res = await fetchProfile();
+          if (!res) {
+            throw new Error("Profile not found");
+          }
+          setProfile(res);
+          return res;
+        },
+        enabled: !profile?.name,
+      },
+      {
+        queryKey: ["result"],
+        queryFn: async () => {
+          const response = await fetch("/api/result", {
+            credentials: "include",
+          });
+          const json = await response.json();
+          console.log("result json: ", json);
+          setResult(json);
+          return json;
+        },
+        retry: 3,
+        enabled: !result?.length,
+      },
+      {
+        queryKey: ["schedule"],
+        queryFn: async () => {
+          const res = await fetchSchedule();
+          if (!res) {
+            throw new Error("Schedule not found");
+          }
+          const tweakedSchedule = res.map((item) => {
+            return {
+              ...item,
+              schedule: item.schedule.map((schedule) => {
+                return {
+                  ...schedule,
+                  color:
+                    schedule.color ||
+                    predefinedColors[
+                      Math.floor(Math.random() * predefinedColors.length)
+                    ],
+                };
+              }),
+            };
+          });
 
-					setSchedule(tweakedSchedule);
-					return res;
-				},
-				enabled: !schedule?.length,
-			},
-		],
-	});
+          setSchedule(tweakedSchedule);
+          return res;
+        },
+        enabled: !schedule?.length,
+      },
+    ],
+  });
 
-	if (fetchImaluum.some((query) => query.isLoading)) {
-		return <LoadingScreen />;
-	}
+  if (fetchImaluum.some((query) => query.isLoading)) {
+    return <LoadingScreen />;
+  }
 
-	if (fetchImaluum.some((query) => query.isError)) {
-		return <NotFound />;
-	}
+  if (fetchImaluum.some((query) => query.isError)) {
+    return <NotFound />;
+  }
 
-	if (profile && result?.length !== 0 && schedule?.length !== 0) {
-		return children;
-	}
+  if (profile && result?.length !== 0 && schedule?.length !== 0) {
+    return children;
+  }
 
-	// if (profile && schedule?.length !== 0) {
-	//   return children;
-	// }
-	//
-	return <NotFound />;
+  // if (profile && schedule?.length !== 0) {
+  //   return children;
+  // }
+  //
+  return <NotFound />;
 };
 
 export default ImaluumProvider;

@@ -1,26 +1,109 @@
+import { json } from "@tanstack/start";
+import { createAPIFileRoute } from "@tanstack/start/api";
 import { parse } from "node-html-parser";
 import type { Result } from "~/types/result";
+import { IMALUUM_RESULT_PAGE } from "~/constants";
+import { log } from "~/utils/log";
 
-/**
- * A helper function to get the result from a single session
- * @param {string} session_query
- * @param {string} session_name
- * @param {string} cookie
- * @returns {Result} An object containing the result for a single session
- */
-export const getResultFromSession = async (
+export const Route = createAPIFileRoute("/api/result")({
+  GET: async ({ request }) => {
+    log("Hello /api/result");
+    const token = request.headers.get("cookie");
+    const data: Result[] = [];
+
+    if (!token) {
+      return json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    try {
+      const response = await fetch(IMALUUM_RESULT_PAGE, {
+        method: "GET",
+        headers: {
+          Cookie: token,
+        },
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        return json([], { status: 500 });
+      }
+
+      const body = await response.text();
+
+      const root = parse(body);
+      if (!root) {
+        log("Failed to parse the page body");
+        return json([], { status: 500 });
+      }
+
+      const sessionBody = root.querySelectorAll(
+        ".box.box-primary .box-header.with-border .dropdown ul.dropdown-menu li[style*='font-size:16px']",
+      );
+
+      if (!sessionBody) {
+        log("Failed to fetch session body");
+        return json([], { status: 500 });
+      }
+
+      const sessionList = [];
+
+      for (const element of sessionBody) {
+        const row = element;
+        const sessionName = row.querySelector("a")?.textContent.trim();
+        const sessionQuery = row.querySelector("a")?.getAttribute("href");
+        sessionList.push({ sessionName, sessionQuery });
+      }
+
+      sessionList.reverse();
+      if (sessionList.length === 0) {
+        // must return null, dont throw error
+        // assuming the student is 1st year 1st sem and havent taken any exams yet
+        return json([], { status: 200 });
+      }
+
+      const results: Result[] = await Promise.all(
+        sessionList.map(({ sessionQuery, sessionName }) =>
+          getResultFromSession(
+            sessionQuery as string,
+            sessionName as string,
+            token,
+          ),
+        ),
+      );
+
+      log("Results: ", results);
+
+      data.push(...results);
+
+      // return {
+      //   success: true,
+      //   data: results,
+      // };
+    } catch (error) {
+      log("Error fetching data:", error);
+      return json([], { status: 500 });
+    }
+
+    // return json({ message: "Hello /api/route/result" });
+    return json(data, { status: 200 });
+  },
+});
+
+const getResultFromSession = async (
   session_query: string,
   session_name: string,
   cookie: string,
 ): Promise<Result> => {
-  const url = `https://imaluum.iium.edu.my/MyAcademic/result${session_query}`;
+  const url = `${IMALUUM_RESULT_PAGE}${session_query}`;
+
+  log("URL: ", url);
+
   try {
     const response = await fetch(url, {
       headers: {
-        Cookie: `MOD_AUTH_CAS=${cookie}`,
+        Cookie: cookie,
       },
-      // https: { rejectUnauthorized: false },
-      // followRedirect: false,
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -109,72 +192,7 @@ export const getResultFromSession = async (
       remarks,
     };
   } catch (err) {
-    console.error("err", err);
-    throw new Error("Failed to fetch schedule");
+    log("err", err);
+    throw new Error("Failed to fetch result");
   }
 };
-
-const IMALUUM_RESULT_PAGE = "https://imaluum.iium.edu.my/MyAcademic/result";
-
-export async function GetResult(_cookies: string) {
-  try {
-    const response = await fetch(IMALUUM_RESULT_PAGE, {
-      headers: {
-        Cookie: `MOD_AUTH_CAS=${_cookies}`,
-      },
-    });
-
-    if (!response.ok) {
-      return { error: "Failed to fetch data" };
-    }
-
-    const body = await response.text();
-
-    const root = parse(body);
-    if (!root) throw new Error("Failed to parse the page body");
-
-    const sessionBody = root.querySelectorAll(
-      ".box.box-primary .box-header.with-border .dropdown ul.dropdown-menu li[style*='font-size:16px']",
-    );
-
-    if (!sessionBody) throw new Error("Failed to fetch session body");
-
-    const sessionList = [];
-
-    for (const element of sessionBody) {
-      const row = element;
-      const sessionName = row.querySelector("a")?.textContent.trim();
-      const sessionQuery = row.querySelector("a")?.getAttribute("href");
-      sessionList.push({ sessionName, sessionQuery });
-    }
-
-    sessionList.reverse();
-    if (sessionList.length === 0) {
-      // must return null, dont throw error
-      // assuming the student is 1st year 1st sem and havent taken any exams yet
-      return {
-        success: true,
-        data: null,
-      };
-    }
-
-    const results: Result[] = await Promise.all(
-      sessionList.map(({ sessionQuery, sessionName }) =>
-        getResultFromSession(
-          sessionQuery as string,
-          sessionName as string,
-          _cookies,
-        ),
-      ),
-    );
-
-    return {
-      success: true,
-      data: results,
-    };
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    // throw new Error("Failed to fetch data");
-    return { error: "Failed to fetch data" };
-  }
-}

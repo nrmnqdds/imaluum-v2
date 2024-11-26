@@ -80,7 +80,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 			],
 		}),
 		component: RootComponent,
-		notFoundComponent: () => <NotFound />,
+		// notFoundComponent: () => <NotFound />,
 		errorComponent: (props) => {
 			return (
 				<RootDocument>

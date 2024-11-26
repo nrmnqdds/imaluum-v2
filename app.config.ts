@@ -4,10 +4,6 @@ import tsConfigPaths from "vite-tsconfig-paths";
 export default defineConfig({
   server: {
     preset: "node-server",
-    prerender: {
-      routes: ["/"],
-      crawlLinks: true,
-    },
     compatibilityDate: '2024-11-26'
   },
   vite: {

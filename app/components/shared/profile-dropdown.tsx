@@ -2,10 +2,9 @@ import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import useProfile from "~/hooks/use-profile";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
-import { deleteCookie } from "vinxi/http";
 import toast from "react-hot-toast";
 import { Image } from "@unpic/react";
-import { createServerFn } from "@tanstack/start";
+import { handleLogout } from "~/actions/logout";
 
 export default function ProfileDropdown() {
 	const { profile } = useProfile();
@@ -13,12 +12,6 @@ export default function ProfileDropdown() {
 	const queryClient = useQueryClient();
 
 	const router = useRouter();
-
-	const handleLogout = createServerFn("POST", async () => {
-		deleteCookie("MOD_AUTH_CAS");
-
-		return;
-	});
 
 	return (
 		<Menu as="div" className="relative inline-block text-left">

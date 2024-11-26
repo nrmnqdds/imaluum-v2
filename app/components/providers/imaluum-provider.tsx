@@ -3,35 +3,16 @@ import { predefinedColors } from "~/utils/colors";
 import LoadingScreen from "~/components//shared/loading-screen";
 import { NotFound } from "~/components/shared/not-found";
 import useProfile from "~/hooks/use-profile";
-// import useResult from "~/hooks/use-result";
+import useResult from "~/hooks/use-result";
 import useSchedule from "~/hooks/use-schedule";
 import { fetchSchedule } from "~/actions/schedule";
 import { fetchProfile } from "~/actions/profile";
-// import { GetResult } from "~/utils/scraper/result";
+import { fetchResult } from "~/actions/result";
 
 const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 	const { profile, setProfile } = useProfile();
 	const { schedule, setSchedule } = useSchedule();
-
-	// const fetchResult = createServerFn("GET", async () => {
-	//   const token = GetToken();
-	//
-	//   if (!token) {
-	//     throw redirect({
-	//       to: "/",
-	//     });
-	//   }
-	//   const res = await GetResult(token);
-	//
-	//   if (res.error || !res.data) {
-	//     console.log("result error: ", res);
-	//     return null;
-	//   }
-	//
-	//   const json = res.data;
-	//
-	//   return json;
-	// });
+	const { result, setResult } = useResult();
 
 	const fetchImaluum = useQueries({
 		queries: [
@@ -42,25 +23,24 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 					if (!res) {
 						throw new Error("Profile not found");
 					}
-					console.log("profile res: ", res);
 					setProfile(res);
 					return res;
 				},
 				enabled: !profile?.name,
 			},
-			// {
-			// 	queryKey: ["result"],
-			// 	queryFn: async () => {
-			// 		const res = await fetchResult();
-			// 		if (!res) {
-			// 			throw new Error("Result not found");
-			// 		}
-			// 		setResult(res);
-			// 		return res;
-			// 	},
-			// 	retry: 3,
-			// 	enabled: !result?.length,
-			// },
+			{
+				queryKey: ["result"],
+				queryFn: async () => {
+					const res = await fetchResult();
+					if (!res) {
+						throw new Error("Profile not found");
+					}
+					setResult(res);
+					return res;
+				},
+				retry: 3,
+				enabled: !result?.length,
+			},
 			{
 				queryKey: ["schedule"],
 				queryFn: async () => {
@@ -100,14 +80,14 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 		return <NotFound />;
 	}
 
-	// if (profile && result?.length !== 0 && schedule?.length !== 0) {
-	//   return children;
-	// }
-
-	if (profile && schedule?.length !== 0) {
+	if (profile && result?.length !== 0 && schedule?.length !== 0) {
 		return children;
 	}
 
+	// if (profile && schedule?.length !== 0) {
+	//   return children;
+	// }
+	//
 	return <NotFound />;
 };
 

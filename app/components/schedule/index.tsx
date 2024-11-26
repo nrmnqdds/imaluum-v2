@@ -39,7 +39,7 @@ export default function Timetable({ events }: TimetableProps) {
 	const config = getTimetableConfig();
 
 	return (
-		<div className="relative h-full bg-card">
+		<div className="relative h-full bg-background">
 			<TimetableWeekDays startDay={config.startDay} endDay={config.endDay} />
 			<div className="">
 				{range(config.startHour, config.endHour).map((hour, index) => (

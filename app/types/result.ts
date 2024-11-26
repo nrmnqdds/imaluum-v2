@@ -4,7 +4,7 @@ export type Result = {
 	gpa_value: string;
 	cgpa_value: string;
 	status: string;
-	remarks: string;
+	credit_hours: string;
 	result: {
 		course_code: string;
 		course_name: string;

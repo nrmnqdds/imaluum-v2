@@ -24,7 +24,7 @@ export const getResultFromSession = async (
 		});
 
 		if (!response.ok) {
-			throw new Error("Failed to fetch schedule");
+			throw new Error("Failed to fetch result");
 		}
 
 		const body = await response.text();
@@ -34,7 +34,7 @@ export const getResultFromSession = async (
 		const table = root.querySelector(".box-body table.table.table-hover");
 		const rows = table?.querySelectorAll("tr");
 
-		if (!rows) throw new Error("Failed to fetch schedule");
+		if (!rows) throw new Error("Failed to fetch result");
 
 		const result = [];
 
@@ -109,7 +109,7 @@ export const getResultFromSession = async (
 			remarks,
 		};
 	} catch (err) {
-		console.log("err", err);
+		console.error("err", err);
 		throw new Error("Failed to fetch schedule");
 	}
 };

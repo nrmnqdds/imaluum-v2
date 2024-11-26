@@ -1,5 +1,6 @@
-import ProfileDropdown from "~/components/shared/profile-dropdown";
+// import ProfileDropdown from "~/components/shared/profile-dropdown";
 import { ThemeSwitcher } from "~/components/shared/theme-switcher";
+import toast from "react-hot-toast";
 import {
 	Dialog,
 	DialogPanel,
@@ -17,7 +18,13 @@ import { Image } from "@unpic/react";
 import { useRouterState, useRouter } from "@tanstack/react-router";
 import { Fragment, useState } from "react";
 import { cn } from "~/utils/cn";
-import Clock from "./clock";
+import { Button } from "./button";
+import { handleLogout } from "~/actions/logout";
+import { useQueryClient } from "@tanstack/react-query";
+import useProfile from "~/hooks/use-profile";
+import useResult from "~/hooks/use-result";
+import useSchedule from "~/hooks/use-schedule";
+// import Clock from "./clock";
 
 const navigation = [
 	{ name: "Dashboard", href: "/dashboard", icon: HomeIcon, disabled: false },
@@ -33,6 +40,11 @@ const navigation = [
 export default function Sidebar({ children }: { children: React.ReactNode }) {
 	const _router = useRouterState();
 	const router = useRouter();
+	const queryClient = useQueryClient();
+
+	const { reset: resetProfile } = useProfile();
+	const { reset: resetSchedule } = useSchedule();
+	const { reset: resetResult } = useResult();
 
 	const pathname = _router.location.pathname;
 
@@ -93,7 +105,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 									</div>
 								</TransitionChild>
 								{/* Sidebar component, swap this element with another sidebar if you like */}
-								<div className="flex grow flex-col gap-y-5 overflow-y-auto bg-card px-6 pb-4">
+								<div className="flex grow flex-col gap-y-5 overflow-y-auto bg-background px-6 pb-4">
 									<div className="flex h-32 shrink-0 items-center justify-center">
 										<Image
 											width={64}
@@ -135,6 +147,24 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 													))}
 												</ul>
 											</li>
+											<li className="mt-auto">
+												<div className="flex flex-col w-full items-center justify-center gap-5">
+													<ThemeSwitcher />
+													<Button
+														className="bg-red-400 hover:bg-red-500 border border-red-600 text-foreground w-full"
+														onClick={async () => {
+															await handleLogout();
+															queryClient.clear();
+															toast.success("Logged out successfully");
+															router.navigate({
+																to: "/",
+															});
+														}}
+													>
+														<span>Logout</span>
+													</Button>
+												</div>
+											</li>
 										</ul>
 									</nav>
 								</div>
@@ -147,7 +177,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 			{/* Static sidebar for desktop */}
 			<div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
 				{/* Sidebar component, swap this element with another sidebar if you like */}
-				<div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-border bg-card px-6 pb-4">
+				<div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-border bg-background px-6 pb-4">
 					<div className="flex h-32 shrink-0 items-center justify-center">
 						<Image
 							width={64}
@@ -185,14 +215,14 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 														pathname === item.href
 															? "text-primary"
 															: "text-accent group-hover:text-primary",
-														item.disabled && "group-hover:text-foreground",
+														item.disabled && "group-hover:text-accent",
 														"h-6 w-6 shrink-0",
 													)}
 													aria-hidden="true"
 												/>
 												{item.name}
 												{item.name === "Class Timetable" && (
-													<span className="ml-auto text-xs font-semibold bg-red-500 text-red-200 animate-pulse rounded-full px-3 py-1">
+													<span className="ml-auto animate-pulse rounded-full bg-red-500 px-3 py-1 text-xs font-semibold text-red-200">
 														HOT
 													</span>
 												)}
@@ -202,48 +232,43 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 								</ul>
 							</li>
 							<li className="mt-auto">
-								<div className="w-full flex items-center justify-center">
+								<div className="flex flex-col w-full items-center justify-center gap-5">
 									<ThemeSwitcher />
+									<Button
+										className="bg-red-400 hover:bg-red-500 border border-red-600 text-foreground w-full"
+										onClick={async () => {
+											await handleLogout();
+											queryClient.clear();
+											resetProfile();
+											resetSchedule();
+											resetResult();
+											toast.success("Logged out successfully");
+											router.navigate({
+												to: "/",
+											});
+										}}
+									>
+										<span>Logout</span>
+									</Button>
 								</div>
 							</li>
 						</ul>
 					</nav>
 				</div>
 			</div>
-
-			<div className="lg:pl-72">
-				<div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-border bg-card px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-					<button
-						type="button"
-						className="-m-2.5 p-2.5 text-foreground lg:hidden"
-						onClick={() => setSidebarOpen(true)}
-					>
-						<span className="sr-only">Open sidebar</span>
-						<Bars3Icon className="h-6 w-6" aria-hidden="true" />
-					</button>
-
-					{/* Separator */}
-					<div className="h-6 w-px bg-gray-200 lg:hidden" aria-hidden="true" />
-
-					<div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-						<Clock />
-						<div className="flex items-center gap-x-4 lg:gap-x-6">
-							{/* Separator */}
-							<div
-								className="hidden lg:block lg:h-6 lg:w-px lg:bg-zinc-600"
-								aria-hidden="true"
-							/>
-
-							{/* Profile dropdown */}
-							<ProfileDropdown />
-						</div>
-					</div>
-				</div>
-
-				<main className="lg:overflow-x-hidden bg-card scrollbar-hide">
-					{children}
-				</main>
+			<div className="fixed top-10 right-10 z-40 lg:hidden">
+				<button
+					type="button"
+					onClick={() => setSidebarOpen(true)}
+					className="-m-2.5 p-2.5 text-indigo-200 lg:hidden"
+				>
+					<span className="sr-only">Open sidebar</span>
+					<Bars3Icon aria-hidden="true" className="size-10" />
+				</button>
 			</div>
+			<main className="bg-background scrollbar-hide lg:overflow-x-hidden lg:pl-72 overscroll-y-none">
+				{children}
+			</main>
 		</div>
 	);
 }

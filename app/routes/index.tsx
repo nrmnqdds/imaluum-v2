@@ -1,30 +1,16 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import LoginForm from "~/components/landing-page/login-form";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Image } from "@unpic/react";
 import { ThemeSwitcher } from "~/components/shared/theme-switcher";
-import { getCookie } from "vinxi/http";
-import { createServerFn } from "@tanstack/start";
-
-/**
- * getSession is a function that checks if the user has a session
- * and redirects them to the dashboard if they do.
- */
-const getSession = createServerFn("GET", async () => {
-	const token = getCookie("MOD_AUTH_CAS");
-
-	if (!token) {
-		return;
-	}
-
-	throw redirect({
-		to: "/dashboard",
-	});
-});
+import { getSession } from "~/actions/auth";
 
 export const Route = createFileRoute("/")({
 	component: Home,
-	beforeLoad: async () => await getSession(),
+	beforeLoad: async () =>
+		await getSession({
+			data: { isRoot: true, unauthorizedRoute: "/dashboard" },
+		}),
 });
 
 function Home() {
@@ -108,7 +94,7 @@ function Home() {
 							</span>
 						</a>
 					</div>
-					<h1 className="mt-10 text-4xl font-bold tracking-tight text-zinc-800 dark:text-slate-200 sm:text-6xl">
+					<h1 className="mt-10 text-4xl font-bold text-zinc-800 dark:text-slate-200 sm:text-5xl">
 						Simplified iMa&apos;luum
 					</h1>
 					<p className="mt-3 text-lg leading-8 text-zinc-800 dark:text-slate-200 text-wrap">

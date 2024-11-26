@@ -23,7 +23,7 @@ const CGPAChart = () => {
 			</h1>
 		</div>
 	) : (
-		<div className="flex items-center justify-center h-full w-full ">
+		<div className="flex items-center justify-center h-[200px] w-full ">
 			<ResponsiveContainer width="100%" height="100%">
 				<AreaChart
 					width={500}

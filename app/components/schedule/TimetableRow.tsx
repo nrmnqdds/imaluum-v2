@@ -12,7 +12,7 @@ export default function TimetableRow({
 }: TimetableRowProps) {
 	return (
 		<div className="relative w-full h-16">
-			<div className="absolute w-full h-full border-b border-border/30 sm:border-border" />
+			<div className="absolute w-full h-full border-b border-border/30 sm:border-zinc-900" />
 			<div className="absolute left-0 w-12 h-full hidden sm:flex flex-col items-center justify-start border-r border-border bg-background">
 				{showHour && (
 					<p
@@ -24,13 +24,13 @@ export default function TimetableRow({
 				)}
 			</div>
 			<div className="absolute left-0 sm:left-8 right-0 h-full flex flex-row sm:ml-5">
-				{[...Array(numberOfDays)].map((index) => (
+				{[...Array(numberOfDays)].map((_, index) => (
 					<div
 						key={index}
 						className={`flex-1 h-full
               ${
 								index !== numberOfDays - 1 &&
-								"border-r border-border/30 sm:border-border"
+								"border-r border-border/30 sm:border-zinc-900"
 							}`}
 					/>
 				))}

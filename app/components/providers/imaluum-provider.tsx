@@ -76,19 +76,21 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 		return <LoadingScreen />;
 	}
 
-	if (fetchImaluum.some((query) => query.isError)) {
-		return <NotFound />;
-	}
+	return children;
 
-	if (profile && result?.length !== 0 && schedule?.length !== 0) {
-		return children;
-	}
+	// if (fetchImaluum.some((query) => query.isError)) {
+	// 	return <NotFound />;
+	// }
+
+	// if (profile && result?.length !== 0 && schedule) {
+	// 	return children;
+	// }
 
 	// if (profile && schedule?.length !== 0) {
 	//   return children;
 	// }
 	//
-	return <NotFound />;
+	// return <NotFound />;
 };
 
 export default ImaluumProvider;

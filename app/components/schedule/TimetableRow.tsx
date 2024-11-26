@@ -24,7 +24,7 @@ export default function TimetableRow({
 				)}
 			</div>
 			<div className="absolute left-0 sm:left-8 right-0 h-full flex flex-row sm:ml-5">
-				{[...Array(numberOfDays)].map((index) => (
+				{[...Array(numberOfDays)].map((_, index) => (
 					<div
 						key={index}
 						className={`flex-1 h-full

@@ -1,9 +1,18 @@
 import { redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/start";
-import { GetResult } from "~/utils/scraper/result";
+import { BACKEND_URL } from "~/constants";
+import type { Result } from "~/types/result";
 import { GetToken } from "~/utils/token";
 
-export const fetchResult = createServerFn("GET", async () => {
+type TResultResponse = {
+	status: number;
+	message: string;
+	data: Result[];
+};
+
+export const fetchResult = createServerFn({
+	method: "GET",
+}).handler(async (): Promise<Result[]> => {
 	const token = GetToken();
 
 	if (!token) {
@@ -11,14 +20,21 @@ export const fetchResult = createServerFn("GET", async () => {
 			to: "/",
 		});
 	}
-	const res = await GetResult(token);
 
-	if (res.error || !res.data) {
+	const res = await fetch(`${BACKEND_URL}/api/result`, {
+		credentials: "include",
+		headers: {
+			"Content-Type": "application/json",
+			Cookie: `MOD_AUTH_CAS=${token}`,
+		},
+	});
+
+	if (!res.ok) {
 		console.log("result error: ", res);
-		return null;
+		return [];
 	}
 
-	const json = res.data;
+	const json = (await res.json()) as unknown as TResultResponse;
 
-	return json;
+	return json.data;
 });

@@ -10,32 +10,31 @@ type TScheduleResponse = {
 	data: Sessions[];
 };
 
-export const fetchSchedule = createServerFn(
-	"GET",
-	async (): Promise<Sessions[] | null> => {
-		const token = GetToken();
+export const fetchSchedule = createServerFn({
+	method: "GET",
+}).handler(async (): Promise<Sessions[]> => {
+	const token = GetToken();
 
-		if (!token) {
-			throw redirect({
-				to: "/",
-			});
-		}
-
-		const res = await fetch(`${BACKEND_URL}/api/schedule`, {
-			credentials: "include",
-			headers: {
-				"Content-Type": "application/json",
-				Cookie: `MOD_AUTH_CAS=${token}`,
-			},
+	if (!token) {
+		throw redirect({
+			to: "/",
 		});
+	}
 
-		if (!res.ok) {
-			console.log("schedule error: ", res);
-			return null;
-		}
+	const res = await fetch(`${BACKEND_URL}/api/schedule`, {
+		credentials: "include",
+		headers: {
+			"Content-Type": "application/json",
+			Cookie: `MOD_AUTH_CAS=${token}`,
+		},
+	});
 
-		const json = (await res.json()) as unknown as TScheduleResponse;
+	if (!res.ok) {
+		console.log("schedule error: ", res);
+		return [];
+	}
 
-		return json.data;
-	},
-);
+	const json = (await res.json()) as unknown as TScheduleResponse;
+
+	return json.data;
+});

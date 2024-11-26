@@ -8,6 +8,7 @@ export default defineConfig({
       routes: ["/"],
       crawlLinks: true,
     },
+    compatibilityDate: '2024-11-26'
   },
   vite: {
     build: {
@@ -26,5 +27,6 @@ export default defineConfig({
         projects: ["./tsconfig.json"],
       }),
     ],
+    // assetsInclude: ["**/*.lottie"]
   },
 });

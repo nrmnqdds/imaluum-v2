@@ -21,6 +21,9 @@ import { cn } from "~/utils/cn";
 import { Button } from "./button";
 import { handleLogout } from "~/actions/logout";
 import { useQueryClient } from "@tanstack/react-query";
+import useProfile from "~/hooks/use-profile";
+import useResult from "~/hooks/use-result";
+import useSchedule from "~/hooks/use-schedule";
 // import Clock from "./clock";
 
 const navigation = [
@@ -38,6 +41,10 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 	const _router = useRouterState();
 	const router = useRouter();
 	const queryClient = useQueryClient();
+
+	const { reset: resetProfile } = useProfile();
+	const { reset: resetSchedule } = useSchedule();
+	const { reset: resetResult } = useResult();
 
 	const pathname = _router.location.pathname;
 
@@ -232,6 +239,9 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 										onClick={async () => {
 											await handleLogout();
 											queryClient.clear();
+											resetProfile();
+											resetSchedule();
+											resetResult();
 											toast.success("Logged out successfully");
 											router.navigate({
 												to: "/",

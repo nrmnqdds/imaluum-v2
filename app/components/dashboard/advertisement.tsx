@@ -1,31 +1,10 @@
+import { LinkIcon, TvIcon } from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
-import { fetch } from "undici";
 import { Image } from "@unpic/react";
-import { TvIcon, LinkIcon } from "@heroicons/react/24/outline";
+import { fetchAds } from "~/actions/ads";
 import type { Advertisement as TAds } from "~/types/ads";
-import { createServerFn } from "@tanstack/start";
-import { BACKEND_URL } from "~/constants";
-
-type TAdsResponse = {
-	status: number;
-	message: string;
-	data: TAds[];
-};
 
 export const Advertisement = ({ className }: { className: string }) => {
-	const fetchAds = createServerFn("GET", async (): Promise<TAds[] | null> => {
-		const res = await fetch(`${BACKEND_URL}/api/ads`);
-
-		if (!res.ok) {
-			console.log("ads error: ", res);
-			return null;
-		}
-
-		const json = (await res.json()) as unknown as TAdsResponse;
-
-		return json.data;
-	});
-
 	const { data: ads, isFetching } = useQuery({
 		queryKey: ["ads"],
 		queryFn: async () => {
@@ -39,7 +18,7 @@ export const Advertisement = ({ className }: { className: string }) => {
 
 	return (
 		<section className={className}>
-			<div className="my-5 flex justify-between w-full items-center">
+			<div className="mb-5 flex justify-between w-full items-center">
 				<h2 className="lg:text-lg font-bold text-zinc-900 dark:text-slate-100 flex items-center gap-5">
 					<TvIcon />
 					SOUQ Advertisement

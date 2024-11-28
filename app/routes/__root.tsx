@@ -65,12 +65,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       scripts: [
         {
           src: "https://beamanalytics.b-cdn.net/beam.min.js",
+          "data-token": "09a05d6b-9ccf-4902-8ad0-e623689d586a",
           async: true,
-          datatoken: "09a05d6b-9ccf-4902-8ad0-e623689d586a",
         },
         {
           src: "https://beamanalytics.b-cdn.net/beam.min.js",
-          datatoken: "09a05d6b-9ccf-4902-8ad0-e623689d586a",
+          "data-token": "09a05d6b-9ccf-4902-8ad0-e623689d586a",
           async: true,
         },
         // 				import.meta.env.DEV

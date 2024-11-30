@@ -77,9 +77,9 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 	}
 
 	// return children;
-  if(fetchImaluum.every((query) => query.isFetched)) {
-    return children;
-  }
+	if (fetchImaluum.every((query) => query.isFetched)) {
+		return children;
+	}
 
 	// if (fetchImaluum.some((query) => query.isError)) {
 	// 	return <NotFound />;

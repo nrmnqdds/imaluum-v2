@@ -24,7 +24,7 @@ const ProfileBento = () => {
 		}
 
 		for (const i of result) {
-			creditHours += Number.parseFloat(i.credit_hours);
+			creditHours += Number.parseFloat(Number.isNaN(i.credit_hours) ? "0" : i.credit_hours);
 		}
 
 		return creditHours;

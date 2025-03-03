@@ -1,5 +1,4 @@
-FROM node:20-alpine AS base
-LABEL org.opencontainers.image.source="https://github.com/nrmnqdds/imaluum-v2"
+FROM node:22-alpine AS base
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -25,8 +24,6 @@ ENV TZ=Asia/Kuala_Lumpur
 ENV DEBIAN_FRONTEND=noninteractive
 RUN pnpm run build
 
-FROM base AS runner
-COPY --from=builder /app/.output ./.output
-COPY --from=builder /app/.vinxi ./.vinxi
-EXPOSE 3000
-CMD ["node", "./.output/server/index.mjs"]
+FROM nginx:alpine AS runner
+COPY --from=builder /app/dist /usr/share/nginx/html
+EXPOSE 80

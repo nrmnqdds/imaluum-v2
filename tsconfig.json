@@ -1,25 +1,24 @@
 {
-	"include": ["**/*.ts", "**/*.tsx"],
-	"exclude": ["node_modules"],
 	"compilerOptions": {
-		"strict": true,
-		"esModuleInterop": true,
-		"jsx": "react-jsx",
-		"module": "ESNext",
-		"moduleResolution": "Bundler",
+		"target": "ES2022",
 		"lib": ["DOM", "DOM.Iterable", "ES2022"],
+		"module": "ESNext",
+		"jsx": "react-jsx",
+		"noEmit": true,
+		"strict": true,
+    "strictNullChecks": true,
+		"skipLibCheck": true,
 		"isolatedModules": true,
 		"resolveJsonModule": true,
-		"skipLibCheck": true,
-		"target": "ES2022",
-		"allowJs": true,
-		"forceConsistentCasingInFileNames": true,
-		"baseUrl": ".",
+		"esModuleInterop": true,
+		"moduleResolution": "Bundler",
+		"useDefineForClassFields": true,
+		"allowImportingTsExtensions": true,
 		"paths": {
-			"~/*": ["./app/*"],
-			"~public/*": ["./public/*"]
+			"~/*": ["src/*"]
 		},
-		"noEmit": true,
-		"strictNullChecks": true
-	}
+		"baseUrl": "."
+	},
+	"include": ["src", "rsbuild.config.ts"],
+	"exclude": ["node_modules", "dist"]
 }

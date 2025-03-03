@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Timetable from "~/components/schedule";
 import ScheduleSwitcher from "~/components/schedule/schedule-switcher";
 import { useSchedule } from "~/hooks/use-schedule";
@@ -9,6 +9,10 @@ import getEventsFromSchedules from "~/utils/event-schedule";
 const SchedulePage = () => {
 	const { schedule } = useSchedule();
 	const [subjects, setSubjects] = useState<Schedule[]>(schedule[0].schedule);
+
+	useEffect(() => {
+		console.log(subjects);
+	}, [subjects]);
 
 	return (
 		<section className="min-h-screen flex flex-col">

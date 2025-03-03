@@ -11,6 +11,9 @@ export default function TimetableEventBlock({
 	event,
 	config,
 }: TimetableEventBlockProps) {
+
+  console.log("events: ", event)
+
 	const startMoment = moment(event.weekTime.start, "HH:mm:ss");
 	const endMoment = moment(event.weekTime.end, "HH:mm:ss");
 	const numberOfDays = config.endDay - config.startDay + 1;
@@ -38,7 +41,7 @@ export default function TimetableEventBlock({
 		<button
 			type="button"
 			className={cn(
-				"absolute rounded-md duration-100 p-1 space-y-2 border focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+				"absolute rounded-md duration-100 p-1 space-y-2 border focus-visible:outline-2 focus-visible:outline-offset-2",
 				[event.color],
 			)}
 			style={{
@@ -61,14 +64,14 @@ export default function TimetableEventBlock({
 			{/* 	<p className="text-[8px] md:text-xs font-bold">{event.title}</p> */}
 			{/* </div> */}
 			<div className="block sm:hidden">
-				<p className="text-[8px] md:text-xs font-bold">
+				<p className="text-[8px] md:text-xs">
 					{event.title.split(" ")[0]}
 				</p>
-				<p className="text-[8px] md:text-xs font-bold">
+				<p className="text-[8px] md:text-xs">
 					{event.title.split(" ")[1]}
 				</p>
 			</div>
-			<p className="text-[8px] hidden sm:block md:text-xs md:font-bold">
+			<p className="text-[8px] hidden sm:block md:text-xs">
 				{moment(event.weekTime.start, "HH:mm:ss").format("h:mma")} -{" "}
 				{moment(event.weekTime.end, "HH:mm:ss").format("h:mma")}
 			</p>

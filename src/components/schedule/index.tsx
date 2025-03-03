@@ -51,10 +51,11 @@ export default function Timetable({ events }: TimetableProps) {
 					/>
 				))}
 				<div className="absolute top-0 bottom-0 left-0 -right-px sm:pl-12">
-					<div className="relative w-full h-full">
-						{events.map((event) => (
+					<div className="relative w-full h-full transition-all">
+						{events.map((event, i) => (
 							<TimetableEventBlock
-								key={event.id}
+								// biome-ignore lint/suspicious/noArrayIndexKey: <no animation if not use index???>
+								key={i}
 								event={event}
 								config={config}
 							/>

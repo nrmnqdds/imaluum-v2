@@ -1,5 +1,4 @@
 import { useQueries } from "@tanstack/react-query";
-// import { fetchResult } from "~/actions/result";
 import LoadingScreen from "~/components//shared/loading-screen";
 import { useProfile } from "~/hooks/use-profile";
 import { useResult } from "~/hooks/use-result";
@@ -9,9 +8,9 @@ import type { Sessions } from "~/types/schedule";
 import { predefinedColors } from "~/utils/colors";
 
 const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
-	const { profile, setProfile } = useProfile();
-	const { schedule, setSchedule } = useSchedule();
-	const { result, setResult } = useResult();
+	const { setProfile } = useProfile();
+	const { setSchedule } = useSchedule();
+	const { setResult } = useResult();
 	const { token } = useToken();
 
 	const fetchImaluum = useQueries({
@@ -37,7 +36,6 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 					setProfile(json.data);
 					return json.data;
 				},
-				// enabled: !!token && !profile,
 			},
 			{
 				queryKey: ["result"],
@@ -60,7 +58,6 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 					setResult(json.data);
 					return json.data;
 				},
-				// enabled: !!token && !result.length,
 			},
 			{
 				queryKey: ["schedule"],
@@ -99,7 +96,6 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 					setSchedule(tweakedSchedule);
 					return tweakedSchedule;
 				},
-				// enabled: !!token && !schedule.length,
 			},
 		],
 	});

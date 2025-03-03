@@ -13,7 +13,7 @@ const DashboardPage = () => {
 
 	return (
 		<section className="flex min-h-screen flex-col px-4 py-10 sm:px-6 lg:px-8">
-			<div className="fixed top-10 right-10">
+			<div className="fixed lg:hidden top-10 right-10">
 				<button type="button" onClick={() => toggleIsOpen()}>
 					<Bars3Icon className="w-10 h-10 text-neutral-200" />
 				</button>

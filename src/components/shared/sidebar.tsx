@@ -5,14 +5,13 @@ import {
 	TransitionChild,
 } from "@headlessui/react";
 import {
-	Bars3Icon,
 	CalendarIcon,
 	FlagIcon,
 	HomeIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRouter, useRouterState } from "@tanstack/react-router";
+import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { Image } from "@unpic/react";
 import { Fragment } from "react";
 import toast from "react-hot-toast";
@@ -123,8 +122,8 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 												<ul className="-mx-2 space-y-1">
 													{navigation.map((item) => (
 														<li key={item.name}>
-															<a
-																href={item.disabled ? "#" : item.href}
+															<Link
+																to={item.href}
 																className={cn(
 																	pathname === item.href
 																		? "bg-gray-50 text-primary"
@@ -144,7 +143,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 																	aria-hidden="true"
 																/>
 																{item.name}
-															</a>
+															</Link>
 														</li>
 													))}
 												</ul>
@@ -198,13 +197,13 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 								<ul className="-mx-2 space-y-1">
 									{navigation.map((item) => (
 										<li key={item.name}>
-											<button
-												type="button"
-												onClick={() =>
-													router.navigate({
-														to: item.href,
-													})
-												}
+											<Link
+												to={item.href}
+												// onClick={() =>
+												// 	router.navigate({
+												// 		to: item.href,
+												// 	})
+												// }
 												disabled={item.disabled}
 												className={cn(
 													pathname === item.href
@@ -231,7 +230,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 														HOT
 													</span>
 												)}
-											</button>
+											</Link>
 										</li>
 									))}
 								</ul>

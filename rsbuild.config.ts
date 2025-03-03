@@ -1,3 +1,4 @@
+import { InjectManifest } from "@aaroon/workbox-rspack-plugin";
 import { type HtmlConfig, defineConfig } from "@rsbuild/core";
 import { pluginImageCompress } from "@rsbuild/plugin-image-compress";
 import { pluginNodePolyfill } from "@rsbuild/plugin-node-polyfill";
@@ -36,8 +37,15 @@ export default defineConfig({
 		rspack: {
 			plugins: [
 				TanStackRouterRspack({ target: "react", autoCodeSplitting: true }),
+				new InjectManifest({
+					swSrc: "./workers/service-worker.js",
+				}),
 			],
 		},
+	},
+
+	output: {
+		manifest: true,
 	},
 
 	html: {

@@ -1,14 +1,27 @@
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, useRouter } from "@tanstack/react-router";
 import { Image } from "@unpic/react";
+import { useEffect } from "react";
 import LoginForm from "~/components/landing-page/login-form";
 import { ThemeSwitcher } from "~/components/shared/theme-switcher";
+import { useToken } from "~/hooks/use-token";
 
 export const Route = createLazyFileRoute("/")({
 	component: Home,
 });
 
 function Home() {
+	const { token } = useToken();
+	const router = useRouter();
+
+	useEffect(() => {
+		if (token) {
+			router.navigate({
+				to: "/dashboard",
+			});
+		}
+	}, [token, router.navigate]);
+
 	return (
 		<section className="relative">
 			<ThemeSwitcher className="absolute top-2 right-5" />

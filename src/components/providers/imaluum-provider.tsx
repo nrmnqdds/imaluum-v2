@@ -37,7 +37,7 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 					setProfile(json.data);
 					return json.data;
 				},
-				enabled: !!token && !profile,
+				// enabled: !!token && !profile,
 			},
 			{
 				queryKey: ["result"],
@@ -60,7 +60,7 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 					setResult(json.data);
 					return json.data;
 				},
-				enabled: !!token && !result.length,
+				// enabled: !!token && !result.length,
 			},
 			{
 				queryKey: ["schedule"],
@@ -99,7 +99,7 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 					setSchedule(tweakedSchedule);
 					return tweakedSchedule;
 				},
-				enabled: !!token && !schedule.length,
+				// enabled: !!token && !schedule.length,
 			},
 		],
 	});

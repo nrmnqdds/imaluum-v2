@@ -1,10 +1,23 @@
-import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { Outlet, createFileRoute, useRouter } from "@tanstack/react-router";
+import { useEffect } from "react";
 import ImaluumProvider from "~/components/providers/imaluum-provider";
 import FinancialDialog from "~/components/shared/financial-dialog";
 import Sidebar from "~/components/shared/sidebar";
+import { useToken } from "~/hooks/use-token";
 
 export const Route = createFileRoute("/_home")({
 	component: () => {
+		const { token } = useToken();
+		const router = useRouter();
+
+		useEffect(() => {
+			if (!token) {
+				router.navigate({
+					to: "/",
+				});
+			}
+		}, [token, router.navigate]);
+
 		const messages = [
 			"This is a simple version of i-Ma'luum for IIUM students.",
 			"The website is under heavy development.",

@@ -28,6 +28,13 @@ jobs:
           tags: ghcr.io/nrmnqdds/imaluum-v2:latest
           cache-from: type=registry,ref=ghcr.io/nrmnqdds/imaluum-v2:cache
           cache-to: type=registry,mode=max,ref=ghcr.io/nrmnqdds/imaluum-v2:cache,image-manifest=true
+
+  deploy:
+    needs: push-store-image
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@main
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@v1.0.3
         with:

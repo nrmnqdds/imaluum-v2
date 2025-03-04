@@ -34,7 +34,7 @@ const ProfileBento = () => {
 
 	return (
 		<div>
-			<Card className="h-full p-4 border-gray-200 dark:border-zinc-800 bg-zinc-900/50">
+			<Card className="h-full p-4 bg-gray-100 border-gray-200 dark:border-zinc-800 dark:bg-zinc-900/50">
 				<h2 className="text-xl font-semibold">Personal Profile</h2>
 				<div className="h-0.5 w-full bg-gray-200 dark:bg-zinc-800 my-4" />
 				<div className="mb-4 flex items-start justify-between">

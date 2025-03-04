@@ -34,7 +34,7 @@ const ClassBento = () => {
 	}, [schedule]);
 	return (
 		<div className="md:row-span-2">
-			<Card className="h-full p-4 border-gray-200 dark:border-zinc-800 bg-zinc-900/50">
+			<Card className="h-full p-4 bg-gray-100 border-gray-200 dark:border-zinc-800 dark:bg-zinc-900/50">
 				<h2 className="text-xl font-semibold">Today&apos;s classes</h2>
 				<div className="h-0.5 w-full bg-gray-200 dark:bg-zinc-800 my-4" />
 				<div className="space-y-4 overflow-y-auto max-h-[calc(100vh-20rem)] pr-2 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-700">

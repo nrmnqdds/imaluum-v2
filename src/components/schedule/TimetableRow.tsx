@@ -12,7 +12,7 @@ export default function TimetableRow({
 }: TimetableRowProps) {
 	return (
 		<div className="relative w-full h-16">
-			<div className="absolute w-full h-full border-b border-border/30 sm:border-zinc-900" />
+			<div className="absolute w-full h-full border-b border-gray-200 dark:border-zinc-900" />
 			<div className="absolute left-0 w-12 h-full hidden sm:flex flex-col items-center justify-start border-r border-border bg-background">
 				{showHour && (
 					<p
@@ -30,7 +30,7 @@ export default function TimetableRow({
 						className={`flex-1 h-full
               ${
 								index !== numberOfDays - 1 &&
-								"border-r border-border/30 sm:border-zinc-900"
+								"border-r border-gray-200 dark:border-zinc-900"
 							}`}
 					/>
 				))}

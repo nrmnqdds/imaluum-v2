@@ -1,130 +1,59 @@
-const CACHE_NAME = "gomaluum";
-
-const allAssets = self.__WB_MANIFEST.map(({ url }) => url);
-
-const createPromiseResolve = () => {
-	let resolve;
-	const promise = new Promise((res) => (resolve = res));
-
-	return [promise, resolve];
-};
-
-const [precacheAssetsPromise, precacheAssetsResolve] = createPromiseResolve();
-
-const getCache = () => caches.open(CACHE_NAME);
-
-const getCachedAssets = async (cache) => {
-	const keys = await cache.keys();
-
-	return keys.map(({ url }) => `/${url.replace(self.registration.scope, "")}`);
-};
-
-const getRequestHeaders = (responseHeaders) => ({
-	"If-None-Match":
-		responseHeaders?.get("ETag") || responseHeaders?.get("X-ETag"),
-	"X-Cached": allAssets
-		.filter((asset) => asset.endsWith(".js"))
-		.map((asset) => asset.match(/(?<=\.)[^.]+(?=\.js$)/)?.[0])
-		.join(),
-});
-
-const cacheInlineAssets = async (assets) => {
-	const cache = await getCache();
-
-	for (const { url, source } of assets) {
-		const response = new Response(source, {
-			headers: {
-				"Cache-Control": "public, max-age=31536000, immutable",
-				"Content-Type": "application/javascript",
-			},
-		});
-
-		cache.put(url, response);
-
-		console.log(`Cached %c${url}`, "color: yellow; font-style: italic;");
-	}
-};
-
-const precacheAssets = async ({ ignoreAssets }) => {
-	const cache = await getCache();
-	const cachedAssets = await getCachedAssets(cache);
-	const assetsToPrecache = allAssets.filter(
-		(asset) => !cachedAssets.includes(asset) && !ignoreAssets.includes(asset),
-	);
-
-	await cache.addAll(assetsToPrecache);
-	await removeUnusedAssets();
-	await fetchDocument({ url: "/" });
-};
-
-const removeUnusedAssets = async () => {
-	const cache = await getCache();
-	const cachedAssets = await getCachedAssets(cache);
-
-	for (const asset of cachedAssets) {
-		if (!allAssets.includes(asset)) cache.delete(asset);
-	}
-};
-
-const fetchDocument = async ({ url, preloadResponse }) => {
-	const cache = await getCache();
-	const cachedDocument = await cache.match("/");
-
-	try {
-		const response = await (preloadResponse && cachedDocument
-			? preloadResponse
-			: fetch(url, { headers: getRequestHeaders(cachedDocument?.headers) }));
-
-		if (response.status === 304) return cachedDocument;
-
-		cache.put("/", response.clone());
-
-		self.clients.matchAll({ includeUncontrolled: true }).then(([client]) => {
-			client?.postMessage({
-				navigationPreloadHeader: JSON.stringify(
-					getRequestHeaders(response.headers),
-				),
-			});
-		});
-
-		return response;
-	} catch (err) {
-		return cachedDocument;
-	}
-};
-
-const fetchAsset = async (request) => {
-	const cache = await getCache();
-	const cachedResponse = await cache.match(request);
-
-	return cachedResponse || fetch(request);
-};
+const CACHE_NAME = "imaluum-v2-cache";
+const urlsToCache = self.__WB_MANIFEST.map(({ url }) => url).concat(["/"]); // Add root URL
 
 self.addEventListener("install", (event) => {
-	event.waitUntil(precacheAssetsPromise);
-	self.skipWaiting();
+	event.waitUntil(
+		caches.open(CACHE_NAME).then((cache) => {
+			console.log("Opened cache");
+			return cache.addAll(urlsToCache);
+		}),
+	);
+	self.skipWaiting(); // Immediately activate the new service worker
 });
 
-self.addEventListener("activate", (event) =>
-	event.waitUntil(self.registration.navigationPreload?.enable()),
-);
-
-self.addEventListener("message", async (event) => {
-	const { inlineAssets } = event.data;
-
-	await cacheInlineAssets(inlineAssets);
-	await precacheAssets({ ignoreAssets: inlineAssets.map(({ url }) => url) });
-
-	precacheAssetsResolve();
+self.addEventListener("activate", (event) => {
+	event.waitUntil(
+		caches.keys().then((cacheNames) => {
+			return Promise.all(
+				cacheNames
+					.filter((cacheName) => cacheName !== CACHE_NAME)
+					.map((cacheName) => {
+						return caches.delete(cacheName);
+					}),
+			);
+		}),
+	);
+	self.clients.claim(); // Take control of all clients
 });
 
 self.addEventListener("fetch", (event) => {
-	const { request, preloadResponse } = event;
+	event.respondWith(
+		caches.match(event.request).then((response) => {
+			// Cache hit - return response
+			if (response) {
+				return response;
+			}
 
-	if (request.destination === "document")
-		return event.respondWith(
-			fetchDocument({ url: request.url, preloadResponse }),
-		);
-	if (["font", "script"].includes(request.destination))
-		event.respondWith(fetchAsset(request));
+			// IMPORTANT: Clone the request. This is needed because the request
+			// stream is consumed when you make a call to fetch.
+			const fetchRequest = event.request.clone();
+
+			return fetch(fetchRequest).then((response) => {
+				// Check if we received a valid response
+				if (!response || response.status !== 200 || response.type !== "basic") {
+					return response;
+				}
+
+				// IMPORTANT: Clone the response. This is needed to save the response
+				// for future uses.
+				const responseToCache = response.clone();
+
+				caches.open(CACHE_NAME).then((cache) => {
+					cache.put(event.request, responseToCache);
+				});
+
+				return response;
+			});
+		}),
+	);
 });

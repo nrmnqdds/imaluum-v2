@@ -1,4 +1,4 @@
-import { InjectManifest } from "@aaroon/workbox-rspack-plugin";
+// import { InjectManifest } from "@aaroon/workbox-rspack-plugin";
 import { type HtmlConfig, defineConfig } from "@rsbuild/core";
 import { pluginImageCompress } from "@rsbuild/plugin-image-compress";
 import { pluginNodePolyfill } from "@rsbuild/plugin-node-polyfill";
@@ -35,11 +35,34 @@ export default defineConfig({
 
 	tools: {
 		rspack: {
+			optimization: {
+				realContentHash: false,
+				runtimeChunk: "single",
+				splitChunks: {
+					chunks: "initial",
+					cacheGroups: {
+						vendors: {
+							test: /[\\/]node_modules[\\/]/,
+							chunks: "all",
+							minSize: 10000,
+							name: (module) => {
+								const moduleName = (module?.context?.match(
+									/[\\/]node_modules[\\/](.*?)([\\/]|$)/,
+								) || [])[1];
+
+								if (moduleName) {
+									return `vendor.${moduleName.replace("@", "")}`;
+								}
+							},
+						},
+					},
+				},
+			},
 			plugins: [
 				TanStackRouterRspack({ target: "react", autoCodeSplitting: true }),
-				new InjectManifest({
-					swSrc: "./workers/service-worker.js",
-				}),
+				// new InjectManifest({
+				// 	swSrc: "./workers/service-worker.js",
+				// }),
 			],
 		},
 	},

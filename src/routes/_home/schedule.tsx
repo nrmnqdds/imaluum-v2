@@ -15,11 +15,11 @@ const SchedulePage = () => {
 
 	return (
 		<section className="min-h-screen flex flex-col">
-			<div className="w-full p-2 flex">
-				<div className="flex-1 w-fit">
+			<div className="lg:w-fit w-full p-2 flex">
+				<div className="flex-1 lg:w-fit">
 					<ScheduleSwitcher courses={schedule} setEvents={setSubjects} />
 				</div>
-				<div className="flex-1 flex items-center justify-end lg:hidden">
+				<div className="lg:flex-1 flex items-center justify-end lg:hidden">
 					<button type="button" onClick={() => toggleIsOpen()}>
 						<Bars3Icon className="size-8 text-neutral-200" />
 					</button>

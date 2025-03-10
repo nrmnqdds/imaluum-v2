@@ -8,6 +8,7 @@ import {
 	CalendarIcon,
 	FlagIcon,
 	HomeIcon,
+	UserIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useQueryClient } from "@tanstack/react-query";
@@ -28,6 +29,7 @@ import { Button } from "./button";
 
 const navigation = [
 	{ name: "Dashboard", href: "/dashboard", icon: HomeIcon, disabled: false },
+	// { name: "Profile", href: "/profile", icon: UserIcon, disabled: false },
 	{
 		name: "Class Timetable",
 		href: "/schedule",

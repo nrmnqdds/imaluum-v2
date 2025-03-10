@@ -1,11 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import PWAPrompt from "react-ios-pwa-prompt";
 import App from "./App";
 import "./index.css";
 
 const app = (
 	<React.StrictMode>
 		<App />
+		<PWAPrompt promptOnVisit={1} timesToShow={3} />
 	</React.StrictMode>
 );
 

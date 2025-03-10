@@ -8,162 +8,184 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from '@tanstack/react-router'
 
 // Import Routes
 
-import { Route as rootRoute } from "./routes/__root";
-import { Route as HomeImport } from "./routes/_home";
-import { Route as HomeScheduleImport } from "./routes/_home/schedule";
-import { Route as HomeResultImport } from "./routes/_home/result";
-import { Route as HomeDashboardImport } from "./routes/_home/dashboard";
+import { Route as rootRoute } from './routes/__root'
+import { Route as HomeImport } from './routes/_home'
+import { Route as HomeScheduleImport } from './routes/_home/schedule'
+import { Route as HomeResultImport } from './routes/_home/result'
+import { Route as HomeDashboardImport } from './routes/_home/dashboard'
 
 // Create Virtual Routes
 
-const IndexLazyImport = createFileRoute("/")();
+const IndexLazyImport = createFileRoute('/')()
+const HomeProfileIndexLazyImport = createFileRoute('/_home/profile/')()
 
 // Create/Update Routes
 
 const HomeRoute = HomeImport.update({
-	id: "/_home",
-	getParentRoute: () => rootRoute,
-} as any);
+  id: '/_home',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexLazyRoute = IndexLazyImport.update({
-	id: "/",
-	path: "/",
-	getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/index.lazy").then((d) => d.Route));
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
 const HomeScheduleRoute = HomeScheduleImport.update({
-	id: "/schedule",
-	path: "/schedule",
-	getParentRoute: () => HomeRoute,
-} as any);
+  id: '/schedule',
+  path: '/schedule',
+  getParentRoute: () => HomeRoute,
+} as any)
 
 const HomeResultRoute = HomeResultImport.update({
-	id: "/result",
-	path: "/result",
-	getParentRoute: () => HomeRoute,
-} as any);
+  id: '/result',
+  path: '/result',
+  getParentRoute: () => HomeRoute,
+} as any)
 
 const HomeDashboardRoute = HomeDashboardImport.update({
-	id: "/dashboard",
-	path: "/dashboard",
-	getParentRoute: () => HomeRoute,
-} as any);
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => HomeRoute,
+} as any)
+
+const HomeProfileIndexLazyRoute = HomeProfileIndexLazyImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => HomeRoute,
+} as any).lazy(() =>
+  import('./routes/_home/profile/index.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
-declare module "@tanstack/react-router" {
-	interface FileRoutesByPath {
-		"/": {
-			id: "/";
-			path: "/";
-			fullPath: "/";
-			preLoaderRoute: typeof IndexLazyImport;
-			parentRoute: typeof rootRoute;
-		};
-		"/_home": {
-			id: "/_home";
-			path: "";
-			fullPath: "";
-			preLoaderRoute: typeof HomeImport;
-			parentRoute: typeof rootRoute;
-		};
-		"/_home/dashboard": {
-			id: "/_home/dashboard";
-			path: "/dashboard";
-			fullPath: "/dashboard";
-			preLoaderRoute: typeof HomeDashboardImport;
-			parentRoute: typeof HomeImport;
-		};
-		"/_home/result": {
-			id: "/_home/result";
-			path: "/result";
-			fullPath: "/result";
-			preLoaderRoute: typeof HomeResultImport;
-			parentRoute: typeof HomeImport;
-		};
-		"/_home/schedule": {
-			id: "/_home/schedule";
-			path: "/schedule";
-			fullPath: "/schedule";
-			preLoaderRoute: typeof HomeScheduleImport;
-			parentRoute: typeof HomeImport;
-		};
-	}
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/_home': {
+      id: '/_home'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof HomeImport
+      parentRoute: typeof rootRoute
+    }
+    '/_home/dashboard': {
+      id: '/_home/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof HomeDashboardImport
+      parentRoute: typeof HomeImport
+    }
+    '/_home/result': {
+      id: '/_home/result'
+      path: '/result'
+      fullPath: '/result'
+      preLoaderRoute: typeof HomeResultImport
+      parentRoute: typeof HomeImport
+    }
+    '/_home/schedule': {
+      id: '/_home/schedule'
+      path: '/schedule'
+      fullPath: '/schedule'
+      preLoaderRoute: typeof HomeScheduleImport
+      parentRoute: typeof HomeImport
+    }
+    '/_home/profile/': {
+      id: '/_home/profile/'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof HomeProfileIndexLazyImport
+      parentRoute: typeof HomeImport
+    }
+  }
 }
 
 // Create and export the route tree
 
 interface HomeRouteChildren {
-	HomeDashboardRoute: typeof HomeDashboardRoute;
-	HomeResultRoute: typeof HomeResultRoute;
-	HomeScheduleRoute: typeof HomeScheduleRoute;
+  HomeDashboardRoute: typeof HomeDashboardRoute
+  HomeResultRoute: typeof HomeResultRoute
+  HomeScheduleRoute: typeof HomeScheduleRoute
+  HomeProfileIndexLazyRoute: typeof HomeProfileIndexLazyRoute
 }
 
 const HomeRouteChildren: HomeRouteChildren = {
-	HomeDashboardRoute: HomeDashboardRoute,
-	HomeResultRoute: HomeResultRoute,
-	HomeScheduleRoute: HomeScheduleRoute,
-};
+  HomeDashboardRoute: HomeDashboardRoute,
+  HomeResultRoute: HomeResultRoute,
+  HomeScheduleRoute: HomeScheduleRoute,
+  HomeProfileIndexLazyRoute: HomeProfileIndexLazyRoute,
+}
 
-const HomeRouteWithChildren = HomeRoute._addFileChildren(HomeRouteChildren);
+const HomeRouteWithChildren = HomeRoute._addFileChildren(HomeRouteChildren)
 
 export interface FileRoutesByFullPath {
-	"/": typeof IndexLazyRoute;
-	"": typeof HomeRouteWithChildren;
-	"/dashboard": typeof HomeDashboardRoute;
-	"/result": typeof HomeResultRoute;
-	"/schedule": typeof HomeScheduleRoute;
+  '/': typeof IndexLazyRoute
+  '': typeof HomeRouteWithChildren
+  '/dashboard': typeof HomeDashboardRoute
+  '/result': typeof HomeResultRoute
+  '/schedule': typeof HomeScheduleRoute
+  '/profile': typeof HomeProfileIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
-	"/": typeof IndexLazyRoute;
-	"": typeof HomeRouteWithChildren;
-	"/dashboard": typeof HomeDashboardRoute;
-	"/result": typeof HomeResultRoute;
-	"/schedule": typeof HomeScheduleRoute;
+  '/': typeof IndexLazyRoute
+  '': typeof HomeRouteWithChildren
+  '/dashboard': typeof HomeDashboardRoute
+  '/result': typeof HomeResultRoute
+  '/schedule': typeof HomeScheduleRoute
+  '/profile': typeof HomeProfileIndexLazyRoute
 }
 
 export interface FileRoutesById {
-	__root__: typeof rootRoute;
-	"/": typeof IndexLazyRoute;
-	"/_home": typeof HomeRouteWithChildren;
-	"/_home/dashboard": typeof HomeDashboardRoute;
-	"/_home/result": typeof HomeResultRoute;
-	"/_home/schedule": typeof HomeScheduleRoute;
+  __root__: typeof rootRoute
+  '/': typeof IndexLazyRoute
+  '/_home': typeof HomeRouteWithChildren
+  '/_home/dashboard': typeof HomeDashboardRoute
+  '/_home/result': typeof HomeResultRoute
+  '/_home/schedule': typeof HomeScheduleRoute
+  '/_home/profile/': typeof HomeProfileIndexLazyRoute
 }
 
 export interface FileRouteTypes {
-	fileRoutesByFullPath: FileRoutesByFullPath;
-	fullPaths: "/" | "" | "/dashboard" | "/result" | "/schedule";
-	fileRoutesByTo: FileRoutesByTo;
-	to: "/" | "" | "/dashboard" | "/result" | "/schedule";
-	id:
-		| "__root__"
-		| "/"
-		| "/_home"
-		| "/_home/dashboard"
-		| "/_home/result"
-		| "/_home/schedule";
-	fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '' | '/dashboard' | '/result' | '/schedule' | '/profile'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '' | '/dashboard' | '/result' | '/schedule' | '/profile'
+  id:
+    | '__root__'
+    | '/'
+    | '/_home'
+    | '/_home/dashboard'
+    | '/_home/result'
+    | '/_home/schedule'
+    | '/_home/profile/'
+  fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-	IndexLazyRoute: typeof IndexLazyRoute;
-	HomeRoute: typeof HomeRouteWithChildren;
+  IndexLazyRoute: typeof IndexLazyRoute
+  HomeRoute: typeof HomeRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
-	IndexLazyRoute: IndexLazyRoute,
-	HomeRoute: HomeRouteWithChildren,
-};
+  IndexLazyRoute: IndexLazyRoute,
+  HomeRoute: HomeRouteWithChildren,
+}
 
 export const routeTree = rootRoute
-	._addFileChildren(rootRouteChildren)
-	._addFileTypes<FileRouteTypes>();
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* ROUTE_MANIFEST_START
 {
@@ -183,7 +205,8 @@ export const routeTree = rootRoute
       "children": [
         "/_home/dashboard",
         "/_home/result",
-        "/_home/schedule"
+        "/_home/schedule",
+        "/_home/profile/"
       ]
     },
     "/_home/dashboard": {
@@ -196,6 +219,10 @@ export const routeTree = rootRoute
     },
     "/_home/schedule": {
       "filePath": "_home/schedule.tsx",
+      "parent": "/_home"
+    },
+    "/_home/profile/": {
+      "filePath": "_home/profile/index.lazy.tsx",
       "parent": "/_home"
     }
   }

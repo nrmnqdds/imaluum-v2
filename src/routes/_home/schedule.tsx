@@ -1,6 +1,7 @@
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { TransitionWrapper } from "~/components/providers/transition-wrapper";
 import Timetable from "~/components/schedule";
 import ScheduleSwitcher from "~/components/schedule/schedule-switcher";
 import { useSchedule } from "~/hooks/use-schedule";
@@ -15,23 +16,25 @@ const SchedulePage = () => {
 
 	return (
 		<section className="min-h-screen flex flex-col">
-			<div className="lg:w-fit w-full p-2 flex">
-				<div className="flex-1 lg:w-fit">
-					<ScheduleSwitcher courses={schedule} setEvents={setSubjects} />
+			<TransitionWrapper>
+				<div className="lg:w-fit w-full p-2 flex">
+					<div className="flex-1 lg:w-fit">
+						<ScheduleSwitcher courses={schedule} setEvents={setSubjects} />
+					</div>
+					<div className="lg:flex-1 flex items-center justify-end lg:hidden">
+						<button type="button" onClick={() => toggleIsOpen()}>
+							<Bars3Icon className="size-8 text-neutral-200" />
+						</button>
+					</div>
 				</div>
-				<div className="lg:flex-1 flex items-center justify-end lg:hidden">
-					<button type="button" onClick={() => toggleIsOpen()}>
-						<Bars3Icon className="size-8 text-neutral-200" />
-					</button>
-				</div>
-			</div>
-			<Timetable
-				events={
-					!subjects || subjects.length === 0
-						? []
-						: getEventsFromSchedules(subjects)
-				}
-			/>
+				<Timetable
+					events={
+						!subjects || subjects.length === 0
+							? []
+							: getEventsFromSchedules(subjects)
+					}
+				/>
+			</TransitionWrapper>
 		</section>
 	);
 };

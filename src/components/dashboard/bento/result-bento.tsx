@@ -1,4 +1,4 @@
-import Card from "~/components/shared/card";
+import { Card } from "~/components/shared/card";
 import CGPAChart from "~/components/dashboard/cgpa-chart";
 
 const ResultBento = () => {

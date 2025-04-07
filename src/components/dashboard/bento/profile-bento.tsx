@@ -4,7 +4,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { useMemo } from "react";
 import { Button } from "~/components/shared/button";
-import Card from "~/components/shared/card";
+import { Card } from "~/components/shared/card";
 import { useProfile } from "~/hooks/use-profile";
 import { useResult } from "~/hooks/use-result";
 

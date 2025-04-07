@@ -5,7 +5,7 @@ import {
 	UsersIcon,
 } from "@heroicons/react/20/solid";
 import { useMemo } from "react";
-import Card from "~/components/shared/card";
+import { Card } from "~/components/shared/card";
 import { useSchedule } from "~/hooks/use-schedule";
 import type { Schedule, Timestamp } from "~/types/schedule";
 

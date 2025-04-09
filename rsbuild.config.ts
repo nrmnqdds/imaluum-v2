@@ -29,12 +29,15 @@ export default defineConfig((options) => {
 		"og:url": "https://imaluum.quddus.my",
 		"msapplication-TileImage":
 			"https://r2.studyjom.nrmnqdds.com/imaluumv2ogcompressed.png",
+		"theme-color": "#000000",
+		"apple-mobile-web-app-capable": "yes",
+		"apple-mobile-web-app-status-bar-style": "black",
+		"apple-mobile-web-app-title": "i-Maluum",
 	} satisfies HtmlConfig["meta"];
 
 	const workboxPlugin = new InjectManifest({
-		// Configure InjectManifest
-		swSrc: "./src/service-worker.ts", // Path to your service worker template
-		swDest: "service-worker.js", // Output path for the generated service worker
+		swSrc: "./src/service-worker.ts",
+		swDest: "service-worker.js",
 		include: [
 			/\.html$/,
 			/\.js$/,
@@ -44,16 +47,15 @@ export default defineConfig((options) => {
 			/\.jpeg$/,
 			/\.svg$/,
 			/\.ico$/,
+			/\.json$/,
 		],
-		// In dev, exclude everything.
-		// This avoids irrelevant warnings about chunks being too large for caching.
-		// In non-dev, use the default `exclude` option, don't override.
 		exclude:
 			options.envMode === "development"
 				? [/./]
-				: [/\.map$/, /manifest$/, /\.htaccess$/, /service-worker\.js$/],
+				: [/\.map$/, /\.htaccess$/],
 		maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
 	});
+
 	return {
 		plugins: [
 			pluginReact(),
@@ -90,26 +92,18 @@ export default defineConfig((options) => {
 				plugins: [
 					TanStackRouterRspack({ target: "react", autoCodeSplitting: true }),
 					workboxPlugin,
-					// Suppress the "InjectManifest has been called multiple times" warning by reaching into
-					// the private properties of the plugin and making sure it never ends up in the state
-					// where it makes that warning.
-					// https://github.com/GoogleChrome/workbox/blob/v6/packages/workbox-webpack-plugin/src/inject-manifest.ts#L260-L282
-					// options.envMode === "development" &&
-					// 	Object.defineProperty(workboxPlugin, "alreadyCalled", {
-					// 		get() {
-					// 			return false;
-					// 		},
-					// 		set() {
-					// 			// do nothing; the internals try to set it to true, which then results in a warning
-					// 			// on the next run of webpack.
-					// 		},
-					// 	}),
 				],
 			},
 		},
 
 		output: {
 			manifest: true,
+			// copy: [
+			// 	{
+			// 		from: "public/manifest.json",
+			// 		to: "manifest.json",
+			// 	},
+			// ],
 		},
 
 		html: {
@@ -126,6 +120,14 @@ export default defineConfig((options) => {
 			},
 			favicon: "./public/favicon.ico",
 			tags: [
+				{
+					tag: "link",
+					head: true,
+					attrs: {
+						rel: "manifest",
+						href: "/manifest.json",
+					},
+				},
 				{
 					tag: "script",
 					head: true,

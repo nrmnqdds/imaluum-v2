@@ -62,6 +62,10 @@ export default defineConfig((options) => {
 			pluginNodePolyfill(),
 		],
 
+		server: {
+			port: 3090,
+		},
+
 		tools: {
 			rspack: {
 				optimization: {
@@ -95,7 +99,7 @@ export default defineConfig((options) => {
 		},
 
 		output: {
-			manifest: true,
+			manifest: false,
 			// copy: [
 			// 	{
 			// 		from: "public/manifest.webmanifest",

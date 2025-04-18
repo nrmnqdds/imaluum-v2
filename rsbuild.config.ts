@@ -7,9 +7,6 @@ import { pluginTypeCheck } from "@rsbuild/plugin-type-check";
 import { TanStackRouterRspack } from "@tanstack/router-plugin/rspack";
 
 export default defineConfig((options) => {
-	console.log("envMode: ", options.envMode);
-	console.log("env: ", options.env);
-
 	const meta = {
 		title: "Simplified i-Maluum",
 		charset: "utf-8",
@@ -48,11 +45,12 @@ export default defineConfig((options) => {
 			/\.svg$/,
 			/\.ico$/,
 			/\.json$/,
+			// Removed .webmanifest from include list
 		],
 		exclude:
 			options.envMode === "development"
 				? [/./]
-				: [/\.map$/, /\.htaccess$/],
+				: [/\.map$/, /\.htaccess$/, /\.webmanifest$/], // Added .webmanifest to exclude list
 		maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
 	});
 
@@ -100,8 +98,8 @@ export default defineConfig((options) => {
 			manifest: true,
 			// copy: [
 			// 	{
-			// 		from: "public/manifest.json",
-			// 		to: "manifest.json",
+			// 		from: "public/manifest.webmanifest",
+			// 		to: "manifest.webmanifest",
 			// 	},
 			// ],
 		},
@@ -125,7 +123,7 @@ export default defineConfig((options) => {
 					head: true,
 					attrs: {
 						rel: "manifest",
-						href: "/manifest.json",
+						href: "/manifest.webmanifest",
 					},
 				},
 				{

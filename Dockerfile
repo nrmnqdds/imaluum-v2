@@ -24,6 +24,9 @@ ENV TZ=Asia/Kuala_Lumpur
 ENV DEBIAN_FRONTEND=noninteractive
 RUN pnpm run build
 
+# Update manifest
+RUN cp public/manifest.webmanifest dist/manifest.webmanifest
+
 FROM nginx:alpine AS runner
 COPY --from=builder /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf

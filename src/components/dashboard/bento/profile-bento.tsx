@@ -43,7 +43,7 @@ const ProfileBento = () => {
 							<img alt="User avatar" src={profile?.image_url} />
 						</div>
 						<div>
-							<h2 className="text-xl font-semibold">
+							<h2 className="text-sm sm:text-xl font-semibold">
 								{profile?.name || "User"}
 							</h2>
 							<p className="text-sm text-gray-500">

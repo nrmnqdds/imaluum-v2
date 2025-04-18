@@ -25,7 +25,7 @@ const DashboardPage = () => {
 				<div className="flex min-h-screen w-full flex-col gap-4 p-4 md:p-6">
 					<div className="grid gap-4 md:grid-cols-2">
 						<div>
-							<h1 className="text-3xl font-bold">
+							<h1 className="text-lg sm:text-3xl font-bold">
 								Hello, {profile?.name || "User"} 👋
 							</h1>
 						</div>

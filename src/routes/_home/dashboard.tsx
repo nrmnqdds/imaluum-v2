@@ -14,12 +14,14 @@ const DashboardPage = () => {
 
 	return (
 		<section className="flex min-h-screen flex-col px-4 py-10 sm:px-6 lg:px-8">
+			<button
+				className="fixed lg:hidden top-10 right-10 z-50"
+				type="button"
+				onClick={() => toggleIsOpen()}
+			>
+				<Bars3Icon className="w-10 h-10 text-neutral-200" />
+			</button>
 			<TransitionWrapper>
-				<div className="fixed lg:hidden top-10 right-10">
-					<button type="button" onClick={() => toggleIsOpen()}>
-						<Bars3Icon className="w-10 h-10 text-neutral-200" />
-					</button>
-				</div>
 				<div className="flex min-h-screen w-full flex-col gap-4 p-4 md:p-6">
 					<div className="grid gap-4 md:grid-cols-2">
 						<div>

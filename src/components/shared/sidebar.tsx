@@ -28,15 +28,30 @@ import { Button } from "./button";
 // import Clock from "./clock";
 
 const navigation = [
-	{ name: "Dashboard", href: "/dashboard", icon: HomeIcon, disabled: false },
-	// { name: "Profile", href: "/profile", icon: UserIcon, disabled: false },
+	{
+		name: "Dashboard",
+		href: "/dashboard",
+		icon: HomeIcon,
+		disabled: false,
+	},
+	// {
+	// name: "Profile",
+	// href: "/profile",
+	// icon: UserIcon,
+	// disabled: false
+	// },
 	{
 		name: "Class Timetable",
 		href: "/schedule",
 		icon: CalendarIcon,
 		disabled: false,
 	},
-	{ name: "Exam Results", href: "/result", icon: FlagIcon, disabled: true },
+	{
+		name: "Exam Results",
+		href: "/result",
+		icon: FlagIcon,
+		disabled: false,
+	},
 ];
 
 export default function Sidebar({ children }: { children: React.ReactNode }) {

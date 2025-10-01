@@ -1,5 +1,6 @@
 import { useQueries } from "@tanstack/react-query";
 import LoadingScreen from "~/components//shared/loading-screen";
+import { API_URL } from "~/constants/url";
 import { useProfile } from "~/hooks/use-profile";
 import { useResult } from "~/hooks/use-result";
 import { useSchedule } from "~/hooks/use-schedule";
@@ -18,7 +19,7 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 			{
 				queryKey: ["profile"],
 				queryFn: async () => {
-					const res = await fetch("https://api.quddus.my/api/profile", {
+					const res = await fetch(`${API_URL}/api/profile`, {
 						credentials: "include",
 						headers: {
 							"Content-Type": "application/json",
@@ -40,7 +41,7 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 			{
 				queryKey: ["result"],
 				queryFn: async () => {
-					const res = await fetch("https://api.quddus.my/api/result", {
+					const res = await fetch(`${API_URL}/api/result`, {
 						credentials: "include",
 						headers: {
 							"Content-Type": "application/json",
@@ -62,7 +63,7 @@ const ImaluumProvider = ({ children }: { children: React.ReactNode }) => {
 			{
 				queryKey: ["schedule"],
 				queryFn: async () => {
-					const res = await fetch("https://api.quddus.my/api/schedule", {
+					const res = await fetch(`${API_URL}/api/schedule`, {
 						credentials: "include",
 						headers: {
 							"Content-Type": "application/json",

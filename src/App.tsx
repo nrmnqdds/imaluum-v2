@@ -1,9 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-	RouterProvider,
-	createRouter as createTanStackRouter,
-} from "@tanstack/react-router";
+import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import { DefaultCatchBoundary } from "~/components/shared/default-catch-boundary";
+import RedirectPage from "./components/providers/redirect-provider";
 import { ThemeProvider } from "./components/providers/theme-provider";
 import { routeTree } from "./routeTree.gen";
 
@@ -34,7 +32,8 @@ const App = () => {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<ThemeProvider defaultTheme="dark" storageKey="imaluum-theme">
-				<RouterProvider router={router} />
+				<RedirectPage />
+				{/* <RouterProvider router={router} /> */}
 			</ThemeProvider>
 		</QueryClientProvider>
 	);
